@@ -1,10 +1,11 @@
 {
   "name": "vue-universal-modal",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/hoiheart/vue-universal-modal/issues"
   },
-  "homepage": "https://github.com/hoiheart/vue-universal-modal#readme"
+  "homepage": "https://github.com/hoiheart/vue-universal-modal#readme",
+  "dependencies": {
+    "vue": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.0.0-rc.1",
+    "esbuild": "^0.7.16",
+    "vite": "^1.0.0-rc.1"
+  }
 }
