@@ -1,16 +1,16 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <VueUniversalModal />
+  <ModalAlert />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import ModalAlert from './components/ModalAlert.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld
+    ModalAlert
   }
 })
 </script>
