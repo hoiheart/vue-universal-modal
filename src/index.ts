@@ -1,9 +1,9 @@
 import type { App } from 'vue'
 import { ref } from 'vue'
-import teleport from './components/index.vue'
-import modal from './components/modal.vue'
+import Teleport from './Teleport.vue'
+import Modal from './Modal.vue'
 
-interface Options {
+interface PluginOptions {
   teleportComponent: string;
   teleportComponentId: string;
   modalComponent: string;
@@ -17,15 +17,15 @@ export default {
     teleportComponent = PLUGIN_NAME,
     teleportComponentId = 'modals',
     modalComponent = 'modal'
-  }: Options) => {
+  }: PluginOptions) => {
     app.provide(PLUGIN_NAME, {
       teleportComponentId,
       isCreatedTeleport: ref(false)
     })
 
-    app.component(teleportComponent, teleport)
-    app.component(modalComponent, modal)
+    app.component(teleportComponent, Teleport)
+    app.component(modalComponent, Modal)
   }
 }
 
-export { Options, PLUGIN_NAME }
+export { PluginOptions, PLUGIN_NAME }

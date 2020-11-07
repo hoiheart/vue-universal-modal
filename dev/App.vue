@@ -1,16 +1,16 @@
 <template>
-  <Example />
+  <Main />
   <VueUniversalModal />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Example from './components/Example.vue'
+import Main from './Main.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
-    Example
+    Main
   }
 })
 </script>
