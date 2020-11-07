@@ -4,20 +4,18 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue'
-import type { PluginOptions } from './index'
+import type { Provide } from './index'
 import { PLUGIN_NAME } from './index'
 
 export default defineComponent({
   setup () {
-    const { isCreatedTeleport, teleportComponentId } = inject(PLUGIN_NAME) as PluginOptions
+    const { teleportComponentId, isCreatedTeleport } = inject(PLUGIN_NAME) as Provide
+
+    isCreatedTeleport.value = true
 
     return {
-      isCreatedTeleport,
       teleportComponentId
     }
-  },
-  created () {
-    this.isCreatedTeleport = true
   }
 })
 </script>

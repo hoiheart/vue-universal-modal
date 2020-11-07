@@ -1,31 +1,26 @@
 <template>
-  <Modal :options="options">
-    <h1>Modal</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-    </p>
-    <button @click="close">close</button>
+  <Modal
+    :close="close"
+    :options="options"
+  >
+    <div class="modal">
+      <h1>{{ title }}</h1>
+      <p>
+        Vue Universal Modal
+      </p>
+      <button @click="close">close</button>
+    </div>
   </Modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  emits: ['hide'],
+  emits: ['close'],
+  props: ['title'],
   setup () {
-    const options = reactive({
-      hide: {
-        background: {
-          type: 'visibility'
-        },
-        keyboard: {
-          type: 'visibility',
-          keycode: '27'
-        }
-      }
-    })
+    const options = {}
 
     return {
       options
@@ -33,8 +28,22 @@ export default defineComponent({
   },
   methods: {
     close () {
-      this.$emit('hide')
+      this.$emit('close')
     }
   }
 })
 </script>
+
+<style scoped lang="scss">
+.modal {
+  width: 50%;
+  padding: 50px;
+  background-color: #fff;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 0;
+}
+</style>

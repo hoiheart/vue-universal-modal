@@ -1,4 +1,4 @@
-import type { App } from 'vue'
+import type { App, Ref } from 'vue'
 import { ref } from 'vue'
 import Teleport from './Teleport.vue'
 import Modal from './Modal.vue'
@@ -7,17 +7,23 @@ interface PluginOptions {
   teleportComponent: string;
   teleportComponentId: string;
   modalComponent: string;
-  isCreatedTeleport: boolean;
+}
+
+interface Provide {
+  teleportComponentId: string;
+  isCreatedTeleport: Ref;
 }
 
 const PLUGIN_NAME = 'VueUniversalModal'
 
 export default {
-  install: (app: App, {
-    teleportComponent = PLUGIN_NAME,
-    teleportComponentId = 'modals',
-    modalComponent = 'modal'
-  }: PluginOptions) => {
+  install: (app: App, options = {}) => {
+    const {
+      teleportComponent = PLUGIN_NAME,
+      teleportComponentId = 'modals',
+      modalComponent = 'Modal'
+    } = options as PluginOptions
+
     app.provide(PLUGIN_NAME, {
       teleportComponentId,
       isCreatedTeleport: ref(false)
@@ -28,4 +34,4 @@ export default {
   }
 }
 
-export { PluginOptions, PLUGIN_NAME }
+export { PluginOptions, Provide, PLUGIN_NAME }
