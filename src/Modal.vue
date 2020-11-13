@@ -1,30 +1,34 @@
 <template>
   <teleport v-if="isCreatedTeleport" :to="`#${teleportComponentId}`">
-    <div ref="modal" v-show="!disabled" class="vue-universal-modal">
-      <div class="vue-universal-modal-content">
-        <slot></slot>
+    <transition name="modal" appear @after-leave="close">
+      <div ref="modal" v-show="show" class="vue-universal-modal" :class="{ active: show }" :style="{ transition, ...styleModal }">
+        <div class="vue-universal-modal-content" @click.self="onClickDimmed" :style="styleModalContent">
+          <slot :emitClose="emitClose"></slot>
+        </div>
       </div>
-    </div>
+    </transition>
   </teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, onMounted, onUnmounted } from 'vue'
+import { defineComponent, inject, ref, onMounted, onUnmounted, watch } from 'vue'
 import type { Provide } from './index'
 import { PLUGIN_NAME } from './index'
 
 interface Options {
   transition: number | false;
   closeKeyCode: number | false;
-  closeDimmedClick: boolean;
+  closeClickDimmed: boolean;
   scrollLock: boolean;
-  style: object;
+  styleModal: object;
+  styleModalContent: object;
 }
 
 export default defineComponent({
   props: {
     close: { // Close function
-      type: Function
+      type: Function,
+      required: true
     },
     options: { // Modal options
       type: Object,
@@ -37,56 +41,81 @@ export default defineComponent({
       default: false
     }
   },
-  // eslint-disable-next-line vue/no-setup-props-destructure
-  setup ({ close, options }) {
+  setup (props) {
     const { isCreatedTeleport, teleportComponentId } = inject(PLUGIN_NAME) as Provide
 
     const modal = ref(null)
+    const show = ref(!props.disabled)
 
-    console.log(close)
-
-    options = {
+    const options = {
       transition: 300,
+      closeClickDimmed: true,
       closeKeyCode: 27,
-      closeDimmedClick: true,
       scrollLock: true,
-      style: {},
-      ...options
+      styleModal: {},
+      styleModalContent: {},
+      ...props.options
     } as Options
 
+    const { closeClickDimmed, closeKeyCode, scrollLock, styleModal, styleModalContent } = options
+    const transition = options.transition ? options.transition / 1000 + 's' : false
+
+    watch(() => props.disabled, (val) => {
+      show.value = !val
+    })
+
+    const emitClose = () => {
+      show.value = false
+    }
+
     const closeKeyEvent = (event: KeyboardEvent) => {
-      if (close && event.keyCode === options.closeKeyCode) {
-        close()
+      if (event.keyCode === closeKeyCode) {
+        show.value = false
+      }
+    }
+
+    const onClickDimmed = () => {
+      if (closeClickDimmed) {
+        show.value = false
       }
     }
 
     onMounted(() => {
-      if (close && options.closeKeyCode) {
+      if (closeKeyCode) {
         document.addEventListener('keyup', closeKeyEvent)
       }
     })
 
     onUnmounted(() => {
-      if (close && options.closeKeyCode) {
+      if (closeKeyCode) {
         document.removeEventListener('keyup', closeKeyEvent)
       }
     })
 
     return {
       modal,
+      show,
+      emitClose,
       isCreatedTeleport,
-      teleportComponentId
+      onClickDimmed,
+      scrollLock,
+      styleModal,
+      styleModalContent,
+      teleportComponentId,
+      transition
     }
   }
 })
 </script>
 
 <style scoped lang="scss">
-.modal-enter-active, .modal-leave-active {
+.modal-leave-from,
+.modal-enter-to {
   opacity: 1;
 }
 
-.modal-enter, .modal-leave-to {
+.modal-enter-from,
+.modal-leave-to {
   opacity: 0;
 }
 

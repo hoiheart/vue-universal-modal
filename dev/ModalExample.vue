@@ -1,14 +1,14 @@
 <template>
   <Modal
-    :close="close"
     :options="options"
+    #default="{ emitClose }"
   >
     <div class="modal">
       <h1>{{ title }}</h1>
       <p>
         Vue Universal Modal
       </p>
-      <button @click="close">close</button>
+      <button @click="emitClose">close</button>
     </div>
   </Modal>
 </template>
@@ -17,18 +17,14 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  emits: ['close'],
   props: ['title'],
   setup () {
-    const options = {}
+    const options = {
+      // transition: false
+    }
 
     return {
       options
-    }
-  },
-  methods: {
-    close () {
-      this.$emit('close')
     }
   }
 })
