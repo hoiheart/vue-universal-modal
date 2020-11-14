@@ -1,7 +1,8 @@
-import type { App, Ref } from 'vue'
 import { ref } from 'vue'
 import Teleport from './Teleport.vue'
 import Modal from './Modal.vue'
+
+import type { App, Ref } from 'vue'
 
 interface PluginOptions {
   teleportComponent: string;
@@ -15,12 +16,13 @@ interface Provide {
 }
 
 const PLUGIN_NAME = 'VueUniversalModal'
+const CLASS_NAME = 'vue-universal-modal'
 
 export default {
   install: (app: App, options = {}) => {
     const {
       teleportComponent = PLUGIN_NAME,
-      teleportComponentId = 'modals',
+      teleportComponentId = `${CLASS_NAME}-teleport`,
       modalComponent = 'Modal'
     } = options as PluginOptions
 
@@ -34,4 +36,5 @@ export default {
   }
 }
 
-export { PluginOptions, Provide, PLUGIN_NAME }
+export { PLUGIN_NAME, CLASS_NAME }
+export type { PluginOptions, Provide }

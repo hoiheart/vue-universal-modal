@@ -1,14 +1,12 @@
 <template>
-  <div
-    :id="teleportComponentId"
-    class="vue-universal-modal-teleport"
-  />
+  <div :id="teleportComponentId" />
 </template>
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue'
-import type { Provide } from './index'
 import { PLUGIN_NAME } from './index'
+
+import type { Provide } from './index'
 
 export default defineComponent({
   setup () {

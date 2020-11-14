@@ -4,19 +4,18 @@
     :to="`#${teleportComponentId}`"
   >
     <transition
-      name="vue-universal-modal"
+      :name="CLASS_NAME"
       appear
       @after-leave="close"
     >
       <div
         v-show="show"
         ref="modal"
-        class="vue-universal-modal"
-        :class="{ active: show }"
+        :class="[CLASS_NAME, { active: show }]"
         :style="{ transition, ...styleModal }"
       >
         <div
-          class="vue-universal-modal-content"
+          :class="`${CLASS_NAME}-content`"
           :style="styleModalContent"
           @click.self="onClickDimmed"
         >
@@ -29,14 +28,14 @@
 
 <script lang="ts">
 import { defineComponent, inject, ref, onMounted, onUnmounted, watch } from 'vue'
+import { PLUGIN_NAME, CLASS_NAME } from './index'
+
 import type { Provide } from './index'
-import { PLUGIN_NAME } from './index'
 
 interface Options {
   transition: number | false;
   closeKeyCode: number | false;
   closeClickDimmed: boolean;
-  scrollLock: boolean;
   styleModal: object;
   styleModalContent: object;
 }
@@ -53,13 +52,13 @@ export default defineComponent({
         return {}
       }
     },
-    disabled: { // Hidden by just use v-show
+    disabled: { // Handle visibility
       type: Boolean,
       default: false
     }
   },
   setup (props) {
-    const { isCreatedTeleport, teleportComponentId } = inject(PLUGIN_NAME) as Provide
+    const { teleportComponentId, isCreatedTeleport } = inject(PLUGIN_NAME) as Provide
 
     const modal = ref(null)
     const show = ref(!props.disabled)
@@ -68,13 +67,12 @@ export default defineComponent({
       transition: 300,
       closeClickDimmed: true,
       closeKeyCode: 27,
-      scrollLock: true,
       styleModal: {},
       styleModalContent: {},
       ...props.options
     } as Options
 
-    const { closeClickDimmed, closeKeyCode, scrollLock, styleModal, styleModalContent } = options
+    const { closeClickDimmed, closeKeyCode, styleModal, styleModalContent } = options
     const transition = options.transition ? options.transition / 1000 + 's' : false
 
     watch(() => props.disabled, (val) => {
@@ -85,14 +83,14 @@ export default defineComponent({
       show.value = false
     }
 
-    const closeKeyEvent = (event: KeyboardEvent) => {
-      if (event.keyCode === closeKeyCode) {
+    const onClickDimmed = () => {
+      if (closeClickDimmed) {
         show.value = false
       }
     }
 
-    const onClickDimmed = () => {
-      if (closeClickDimmed) {
+    const closeKeyEvent = (event: KeyboardEvent) => {
+      if (event.keyCode === closeKeyCode) {
         show.value = false
       }
     }
@@ -110,12 +108,12 @@ export default defineComponent({
     })
 
     return {
-      modal,
-      show,
+      CLASS_NAME,
       emitClose,
       isCreatedTeleport,
+      modal,
       onClickDimmed,
-      scrollLock,
+      show,
       styleModal,
       styleModalContent,
       teleportComponentId,
