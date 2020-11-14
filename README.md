@@ -19,8 +19,8 @@ Universal modal plugin for Vue@3
 
 ## Introduction
 
-vue-universal-modal plugin is based on the <a href="https://v3.vuejs.org/guide/teleport.html#teleport" target="_blank">teleport</a>.  
-It's very light and simple, but the focus is on providing the essential features needed between modal use in the application.  
+`vue-universal-modal` plugin is based on the <a href="https://v3.vuejs.org/guide/teleport.html#teleport" target="_blank">teleport</a>.  
+It's very light and simple, but the focus is on providing the essential features needed between modal use in the application.
 (Such as Add & Remove, Visible & Hidden, Transition, Auto binding close, Support SSR, A11Y...)
 
 ## Install plugin
@@ -115,8 +115,8 @@ Insert the component wrapped with the modal component. (Slot based)
 | transition | `number | false` | `300` | transition duration |
 | closeClickDimmed | `boolean` | `true` | Closes the modal when dimmed is clicked |
 | closeKeyCode | `number | false` | `27` | Handle just visibility (as in v-show) |
-| styleModal | `object` | `{}` | Inject modal style |
-| styleModalContent | `object` | `{}` | Inject modal content style |
+| styleModal | `object` | `{}` | Inject modal window style (`.vue-universal-modal`) |
+| styleModalContent | `object` | `{}` | Inject modal content style (`.vue-universal-modal-content`) |
 
 ### slot arguments
 
@@ -126,9 +126,13 @@ The modal content is inserted into a slot and you can receive special arguments.
 |- | - | - |
 | emitClose | function | Invoke close function passed to props<br>**(Call emit to run after transition end)** |
 
+## Handle global CSS
+
+## Demo
+
 ## Todo
 
-* [ ] Order states
+* [x] Order states
 * [ ] Support SSR
 * [ ] Support IE11
 * [ ] TDD
