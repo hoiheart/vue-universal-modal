@@ -4,7 +4,7 @@
     :to="`#${teleportComponentId}`"
   >
     <transition
-      name="modal"
+      name="vue-universal-modal"
       appear
       @after-leave="close"
     >
@@ -125,14 +125,14 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang="scss">
-.modal-leave-from,
-.modal-enter-to {
+<style lang="scss">
+.vue-universal-modal-leave-from,
+.vue-universal-modal-enter-to {
   opacity: 1;
 }
 
-.modal-enter-from,
-.modal-leave-to {
+.vue-universal-modal-enter-from,
+.vue-universal-modal-leave-to {
   opacity: 0;
 }
 
