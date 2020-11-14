@@ -1,5 +1,8 @@
 <template>
-  <div :id="teleportComponentId" class="vue-universal-modal-teleport"></div>
+  <div
+    :id="teleportComponentId"
+    class="vue-universal-modal-teleport"
+  />
 </template>
 
 <script lang="ts">

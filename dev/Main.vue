@@ -5,16 +5,28 @@
   <div>
     <h2>Modal1 - basic</h2>
     <p>
-      <button @click="showModal(0)">Show modal</button>
+      <button @click="showModal(0)">
+        Show modal
+      </button>
     </p>
-    <ModalExample v-if="modalStatus[0]" :close="() => closeModal(0)" title="Modal 1" />
+    <ModalExample
+      v-if="modalStatus[0]"
+      :close="() => closeModal(0)"
+      title="Modal 1"
+    />
   </div>
   <div>
     <h2>Modal2 - style</h2>
     <p>
-      <button @click="showModal(1)">Show modal</button>
+      <button @click="showModal(1)">
+        Show modal
+      </button>
     </p>
-    <ModalExample :disabled="!modalStatus[1]" :close="() => closeModal(1)" title="Modal 2" />
+    <ModalExample
+      :disabled="!modalStatus[1]"
+      :close="() => closeModal(1)"
+      title="Modal 2"
+    />
   </div>
 </template>
 

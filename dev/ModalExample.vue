@@ -1,14 +1,16 @@
 <template>
   <Modal
+    v-slot="{ emitClose }"
     :options="options"
-    #default="{ emitClose }"
   >
     <div class="modal">
       <h1>{{ title }}</h1>
       <p>
         Vue Universal Modal
       </p>
-      <button @click="emitClose">close</button>
+      <button @click="emitClose">
+        close
+      </button>
     </div>
   </Modal>
 </template>
@@ -17,7 +19,12 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  props: ['title'],
+  props: {
+    title: {
+      type: String,
+      default: ''
+    }
+  },
   setup () {
     const options = {
       // transition: false

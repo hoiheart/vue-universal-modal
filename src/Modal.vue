@@ -1,9 +1,26 @@
 <template>
-  <teleport v-if="isCreatedTeleport" :to="`#${teleportComponentId}`">
-    <transition name="modal" appear @after-leave="close">
-      <div ref="modal" v-show="show" class="vue-universal-modal" :class="{ active: show }" :style="{ transition, ...styleModal }">
-        <div class="vue-universal-modal-content" @click.self="onClickDimmed" :style="styleModalContent">
-          <slot :emitClose="emitClose"></slot>
+  <teleport
+    v-if="isCreatedTeleport"
+    :to="`#${teleportComponentId}`"
+  >
+    <transition
+      name="modal"
+      appear
+      @after-leave="close"
+    >
+      <div
+        v-show="show"
+        ref="modal"
+        class="vue-universal-modal"
+        :class="{ active: show }"
+        :style="{ transition, ...styleModal }"
+      >
+        <div
+          class="vue-universal-modal-content"
+          :style="styleModalContent"
+          @click.self="onClickDimmed"
+        >
+          <slot :emitClose="emitClose" />
         </div>
       </div>
     </transition>
