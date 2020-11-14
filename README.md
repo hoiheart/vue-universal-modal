@@ -134,10 +134,10 @@ The modal content is inserted into a slot and you can receive special arguments.
 
 ## Todo
 
-* [] Order states
-* [] Support SSR
-* [] Support IE11
-* [] TDD
-* [] Make demo
-* [] Semantic release
-* [] A11Y
+* [ ] Order states
+* [ ] Support SSR
+* [ ] Support IE11
+* [ ] TDD
+* [ ] Make demo
+* [ ] Semantic release
+* [ ] A11Y
