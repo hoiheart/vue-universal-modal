@@ -128,6 +128,27 @@ The modal content is inserted into a slot and you can receive special arguments.
 
 ## Handle global CSS
 
+You can change it directly to your own style by referring to the `src/*.vue` or `dist/index.css`
+
+```css
+/* Slide up transition when open modal */
+.vue-universal-modal-enter-from {
+  transform: translate3d(0, 50px, 0);
+}
+.vue-universal-modal-enter-to {
+  transform: translate3d(0, 0, 0);
+}
+
+.vue-universal-modal {
+  /* Change white dimmed */
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.vue-universal-modal-content {
+  /* Align to top (default flex-direction is column) */
+  justify-content: flex-start;
+}
+```
+
 ## Demo
 
 ## Todo

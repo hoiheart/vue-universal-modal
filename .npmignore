@@ -14,6 +14,5 @@ npm-debug.log
 /__tests__
 /dev
 /node_modules
-/src
 *config
 index.html
