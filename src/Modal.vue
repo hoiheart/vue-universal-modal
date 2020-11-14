@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, onMounted, onUnmounted, watch } from 'vue'
+import { defineComponent, inject, ref, onMounted, onUnmounted, watch, watchEffect } from 'vue'
 import { PLUGIN_NAME, CLASS_NAME } from './index'
 
 import type { Provide } from './index'
@@ -95,10 +95,51 @@ export default defineComponent({
       }
     }
 
+    const setOrder = () => {
+      if (show.value) {
+        const latestModal = document.querySelector<HTMLDivElement>(`.${CLASS_NAME}[data-latest]`)
+        delete latestModal?.dataset.latest
+
+        const el = modal.value
+
+        if (el) {
+          (el as HTMLElement).dataset.modified = Date.now().toString();
+          (el as HTMLElement).dataset.latest = ''
+        }
+      } else {
+        const el = modal.value
+
+        if (el) {
+          delete (el as HTMLElement).dataset.modified
+          delete (el as HTMLElement).dataset.latest
+        }
+
+        const activeModals = document.querySelectorAll<HTMLDivElement>(`.${CLASS_NAME}[data-modified]`)
+        let latestModal: HTMLDivElement | null = null
+
+        Array.from(activeModals).map((item) => {
+          if (!latestModal) {
+            latestModal = item
+          } else {
+            const a = new Date(Number(latestModal.dataset.modified))
+            const b = new Date(Number(item.dataset.modified))
+
+            if (b > a) latestModal = item
+          }
+        })
+
+        if (latestModal) {
+          (latestModal as HTMLDivElement).dataset.latest = ''
+        }
+      }
+    }
+
     onMounted(() => {
       if (closeKeyCode) {
         document.addEventListener('keyup', closeKeyEvent)
       }
+
+      watchEffect(() => setOrder)
     })
 
     onUnmounted(() => {
