@@ -4,15 +4,24 @@ Universal modal plugin for Vue@3
 
 > ⚠️ This plug-in does not support Vue@2
 
+## Table of Contents
+
+* [Introduction](#introduction)
+* [Install plugin](#install-plugin)
+  + [options](#options)
+* [Add teleport component](#add-teleport-component)
+* [Usage](#usage)
+  + [props](#props)
+  + [props.options](#propsoptions)
+  + [slot arguments](#slot-arguments)
+* [Todo](#todo)
+
+
 ## Introduction
 
 This plug-in is based on the <a href="https://v3.vuejs.org/guide/teleport.html#teleport" target="_blank">teleport</a>.  
 Made to use the basic functions needed for modal light and easy.  
 (Such as SSR, transition, add&remove, visible&hidden, auto bind close function, A11Y...)
-
-## Demo
-
-
 
 ## Install plugin
 
@@ -120,5 +129,15 @@ Insert the component wrapped with the modal component.
 The modal content is inserted into a slot and you can receive special arguments.
 
 | name | type | description |
-|- | - | - | - |
+|- | - | - |
 | emitClose | function | Invoke close function passed to props<br>**(Call emit to run after transition end)** |
+
+## Todo
+
+* [] Order states
+* [] Support SSR
+* [] Support IE11
+* [] TDD
+* [] Make demo
+* [] Semantic release
+* [] A11Y
