@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import VueUniversalModal from '@/index'
+import VueUniversalModal from '../src/index'
 
 const TeleportComponent = {
   template: `

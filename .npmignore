@@ -11,6 +11,9 @@ config.gypi
 CVS
 npm-debug.log
 
+/__tests__
+/dev
+/node_modules
 /src
-/public
+*config
 index.html

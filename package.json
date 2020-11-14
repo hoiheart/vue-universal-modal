@@ -2,10 +2,10 @@
   "name": "vue-universal-modal",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "rollup --config",
     "test": "vue-cli-service test:unit",
     "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint"
@@ -20,11 +20,12 @@
     "url": "https://github.com/hoiheart/vue-universal-modal/issues"
   },
   "homepage": "https://github.com/hoiheart/vue-universal-modal#readme",
-  "dependencies": {
-    "core-js": "^3.7.0",
+  "peerDependencies": {
     "vue": "^3.0.2"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^10.0.0",
+    "@rollup/plugin-typescript": "^6.1.0",
     "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
@@ -36,16 +37,21 @@
     "@vue/compiler-sfc": "^3.0.2",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^5.0.2",
-    "@vue/test-utils": "^2.0.0-beta.8",
+    "@vue/test-utils": "^2.0.0-beta.9",
+    "autoprefixer": "^8.6.5",
     "babel-eslint": "^10.1.0",
-    "esbuild": "^0.7.22",
+    "core-js": "^3.7.0",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.2",
+    "eslint-plugin-standard": "^4.1.0",
     "eslint-plugin-vue": "^7.1.0",
     "lint-staged": "^9.5.0",
+    "rollup": "^2.33.1",
+    "rollup-plugin-css-only": "^2.1.0",
+    "rollup-plugin-typescript2": "^0.29.0",
+    "rollup-plugin-vue": "^6.0.0-beta.10",
     "sass": "^1.29.0",
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
