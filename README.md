@@ -2,7 +2,7 @@
 
 Universal modal plugin for Vue@3  
 
-> ⚠️ This plug-in does not support Vue@2
+> ⚠️ This plugin does not support Vue@2
 
 ## Table of Contents
 
@@ -19,9 +19,9 @@ Universal modal plugin for Vue@3
 
 ## Introduction
 
-This plug-in is based on the <a href="https://v3.vuejs.org/guide/teleport.html#teleport" target="_blank">teleport</a>.  
-Made to use the basic functions needed for modal light and easy.  
-(Such as SSR, transition, add&remove, visible&hidden, auto bind close function, A11Y...)
+vue-universal-modal plugin is based on the <a href="https://v3.vuejs.org/guide/teleport.html#teleport" target="_blank">teleport</a>.  
+It's very light and simple, but the focus is on providing the essential features needed between modal use in the application.  
+(Such as Add & Remove, Visible & Hidden, Transition, Auto binding close, Support SSR, A11Y...)
 
 ## Install plugin
 
@@ -33,13 +33,12 @@ And install this plugin in vue application
 
 ```ts
 import VueUniversalModal from 'vue-universal-modal'
+import 'vue-universal-modal/dist/index.css'
 
 app.use(VueUniversalModal)
 ```
 
-### options
-
-Several options are available for installation.
+### Options
 
 ```ts
 app.use(VueUniversalModal, {
@@ -52,10 +51,10 @@ app.use(VueUniversalModal, {
 | name | type | detault | description |
 |- | - | - | - |
 | teleportComponent | `string` | `'VueUniversalModal'` | Global teleport component name |
-| teleportComponentId | `string` | `'modals'` | Global teleport component id |
+| teleportComponentId | `string` | `'vue-universal-modal-teleport'` | Global teleport component id |
 | modalComponent | `string` | `'Modal'` | Global modal component name |
 
-## Add teleport component
+## Teleport component
 
 Insert the teleport component into the root component.
 
@@ -69,15 +68,13 @@ Insert the teleport component into the root component.
 </template>
 ```
 
-## Usage
+## Usage modal
 
-Insert the component wrapped with the modal component.
+Insert the component wrapped with the modal component. (Slot based)
 
 ```vue
 <template>
-  <Modal
-    v-slot="{ emitClose }"
-  >
+  <Modal>
   <!-- If the option changed modal component the name
   <MyModal
     ...
@@ -88,9 +85,6 @@ Insert the component wrapped with the modal component.
       <p>
         Vue Universal Modal
       </p>
-      <button @click="emitClose">
-        close
-      </button>
     </div>
   </Modal>
 </template>
@@ -112,9 +106,9 @@ Insert the component wrapped with the modal component.
 |- | - | - | - |
 | close | `function` | `() => {}` | Function to close a modal |
 | options | `object` | `{}` |  |
-| disabled | `boolean` | `false` | Handle just visibility (as in v-show) |
+| disabled | `boolean` | `false` | Handle visibility (as in v-show) |
 
-### props.options
+#### props.options
 
 | name | type | detault | description |
 |- | - | - | - |
