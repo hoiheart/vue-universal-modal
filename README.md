@@ -1,20 +1,24 @@
 # vue-universal-modal
 
+## ⚠️⚠️⚠️ **This plug-in is not yet complete and cannot be used as a product.** ⚠️⚠️⚠️
+
 Universal modal plugin for Vue@3  
 
 > ⚠️ This plugin does not support Vue@2
 
 ## Table of Contents
 
-* [Introduction](#introduction)
-* [Install plugin](#install-plugin)
-  + [options](#options)
-* [Add teleport component](#add-teleport-component)
-* [Usage](#usage)
-  + [props](#props)
-  + [props.options](#propsoptions)
-  + [slot arguments](#slot-arguments)
-* [Todo](#todo)
+- [Introduction](#introduction)
+- [Install plugin](#install-plugin)
+  * [Options](#options)
+- [Teleport component](#teleport-component)
+- [Usage modal](#usage-modal)
+  * [props](#props)
+    + [props.options](#propsoptions)
+  * [slot arguments](#slot-arguments)
+- [Handle global CSS](#handle-global-css)
+- [Demo](#demo)
+- [Todo](#todo)
 
 
 ## Introduction
@@ -155,8 +159,8 @@ You can change it directly to your own style by referring to the `src/*.vue` or 
 
 * [x] Order states
 * [ ] Support SSR
-* [X] Support IE11
+* [ ] Support IE11
 * [ ] TDD
 * [ ] Make demo
-* [ ] Semantic release
+* [X] Semantic release
 * [ ] A11Y
