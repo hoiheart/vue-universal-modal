@@ -28,8 +28,8 @@
     ]
   },
   "include": [
-    "dev/**/*.ts",
-    "dev/**/*.vue",
+    "example/**/*.ts",
+    "example/**/*.vue",
     "src/**/*.ts",
     "src/**/*.vue",
     "__tests__ /**/*.ts"

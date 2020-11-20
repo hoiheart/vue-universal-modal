@@ -16,7 +16,7 @@
       >
         <div
           :class="`${CLASS_NAME}-content`"
-          :style="styleModalContent"
+          :style="{ transition, ...styleModalContent }"
           @click.self="onClickDimmed"
         >
           <slot :emitClose="emitClose" />

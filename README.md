@@ -132,10 +132,10 @@ You can change it directly to your own style by referring to the `src/*.vue` or 
 
 ```css
 /* Slide up transition when open modal */
-.vue-universal-modal-enter-from {
+.vue-universal-modal-enter-from .vue-universal-modal-content {
   transform: translate3d(0, 50px, 0);
 }
-.vue-universal-modal-enter-to {
+.vue-universal-modal-enter-to .vue-universal-modal-content {
   transform: translate3d(0, 0, 0);
 }
 
@@ -155,7 +155,7 @@ You can change it directly to your own style by referring to the `src/*.vue` or 
 
 * [x] Order states
 * [ ] Support SSR
-* [ ] Support IE11
+* [X] Support IE11
 * [ ] TDD
 * [ ] Make demo
 * [ ] Semantic release
