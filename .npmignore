@@ -12,7 +12,8 @@ CVS
 npm-debug.log
 
 /__tests__
-/dev
+/.github
+/example
 /node_modules
 *config
 index.html
