@@ -48,7 +48,7 @@ app.use(VueUniversalModal)
 app.use(VueUniversalModal, {
   teleportComponent: 'MyModalTeleport',
   teleportComponentId: 'my-modal-teleport',
-  teleportComponent: 'MyModal',
+  modalComponent: 'MyModal',
 })
 ```
 
@@ -158,9 +158,9 @@ You can change it directly to your own style by referring to the `src/*.vue` or 
 ## Todo
 
 * [x] Order states
-* [ ] Support SSR
-* [ ] Support IE11
-* [ ] TDD
-* [ ] Make demo
 * [X] Semantic release
+* [ ] TDD (vue-test-utils-next is still beta and is not fully compatible with teleport)
+* [ ] Support SSR (Test only until renderToString of the teleport component by holding the TDD)
+* [ ] Support IE11 (IE 11 support for Vue@3 is still pending)
+* [ ] Make demo
 * [ ] A11Y

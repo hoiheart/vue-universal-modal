@@ -44,7 +44,10 @@ export default defineComponent({
   props: {
     close: { // Close function
       type: Function,
-      required: true
+      required: true,
+      default: () => {
+        return undefined
+      }
     },
     options: { // Modal options
       type: Object,
