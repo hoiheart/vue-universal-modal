@@ -1,5 +1,6 @@
 import path from 'path'
 import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
 import vue from 'rollup-plugin-vue'
 import autoprefixer from 'autoprefixer'
 import typescript from 'rollup-plugin-typescript2'
@@ -10,7 +11,6 @@ const options = {
   input: 'src/index.ts',
   external: ['vue'],
   plugins: [
-    resolve(),
     vue({
       preprocessStyles: true,
       postcssPlugins: [
@@ -20,8 +20,16 @@ const options = {
     typescript({
       tsconfig: path.resolve(__dirname, 'tsconfig.build.json')
     }),
+    resolve(),
+    commonjs(),
     css({ output: 'dist/index.css' })
   ]
+}
+
+const babelOptions = {
+  babelHelpers: 'runtime',
+  exclude: /node_modules/,
+  extensions: ['.ts', '.tsx', '.js', '.jsx', '.es6', '.es', '.mjs', '.vue']
 }
 
 export default [
@@ -42,22 +50,27 @@ export default [
     },
     plugins: [
       ...options.plugins,
-      [
-        babel({
-          presets: [
-            [
-              '@babel/preset-env', {
-                targets: {
-                  ie: '11'
-                }
-              }
+      babel({
+        ...babelOptions,
+        plugins: [
+          ['@babel/plugin-transform-runtime', {
+            useESModules: true
+          }]
+        ],
+        presets: [
+          ['@babel/preset-env', {
+            corejs: 3,
+            modules: false,
+            useBuiltIns: 'usage',
+            targets: [
+              'last 2 versions',
+              'IE >= 11'
             ]
-          ]
-        })
-      ]
+          }]
+        ]
+      })
     ]
   },
-  // runtime build
   {
     ...options,
     input: 'src/index.runtime.ts',
@@ -73,20 +86,22 @@ export default [
     },
     plugins: [
       ...options.plugins,
-      [
-        babel({
-          babelHelpers: 'runtime',
-          presets: [
-            [
-              '@babel/preset-env', {
-                targets: {
-                  ie: '11'
-                }
-              }
+      babel({
+        ...babelOptions,
+        plugins: [
+          '@babel/plugin-transform-runtime'
+        ],
+        presets: [
+          ['@babel/preset-env', {
+            corejs: 3,
+            useBuiltIns: 'usage',
+            targets: [
+              'last 2 versions',
+              'IE >= 11'
             ]
-          ]
-        })
-      ]
+          }]
+        ]
+      })
     ]
   }
 ]

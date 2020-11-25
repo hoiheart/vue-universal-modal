@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import VueUniversalModal from '../src'
+import VueUniversalModal from '../dist/index.es5'
 
 const app = createApp(App)
 app.use(VueUniversalModal, {
