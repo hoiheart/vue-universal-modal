@@ -10,7 +10,7 @@
     "test": "vue-cli-service test:unit",
     "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint",
-    "semantic-release": "semantic-release --branches alpha -d"
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
