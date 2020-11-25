@@ -1,51 +1,107 @@
 import path from 'path'
 import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
 import vue from 'rollup-plugin-vue'
 import autoprefixer from 'autoprefixer'
 import typescript from 'rollup-plugin-typescript2'
 import css from 'rollup-plugin-css-only'
-import { getBabelOutputPlugin } from '@rollup/plugin-babel'
+import babel from '@rollup/plugin-babel'
+
+const options = {
+  input: 'src/index.ts',
+  external: ['vue'],
+  plugins: [
+    vue({
+      preprocessStyles: true,
+      postcssPlugins: [
+        autoprefixer()
+      ]
+    }),
+    typescript({
+      tsconfig: path.resolve(__dirname, 'tsconfig.build.json')
+    }),
+    resolve(),
+    commonjs(),
+    css({ output: 'dist/index.css' })
+  ]
+}
+
+const babelOptions = {
+  babelHelpers: 'runtime',
+  exclude: /node_modules/,
+  extensions: ['.ts', '.tsx', '.js', '.jsx', '.es6', '.es', '.mjs', '.vue']
+}
 
 export default [
+  // esm
   {
-    input: 'src/index.ts',
-    output: [
-      {
-        file: 'dist/index.js',
-        format: 'esm'
-      },
-      {
-        file: 'dist/index.es5.js',
-        format: 'esm',
-        plugins: [
-          getBabelOutputPlugin({
-            presets: [
-              [
-                '@babel/preset-env', {
-                  modules: 'umd',
-                  targets: {
-                    ie: '11'
-                  }
-                }
-              ]
-            ]
-          })
-        ]
-      }
-    ],
-    external: ['vue'],
+    ...options,
+    output: {
+      file: 'dist/index.js',
+      format: 'esm'
+    }
+  },
+  // es5 build
+  {
+    ...options,
+    output: {
+      file: 'dist/index.es5.js',
+      format: 'esm'
+    },
     plugins: [
-      resolve(),
-      vue({
-        preprocessStyles: true,
-        postcssPlugins: [
-          autoprefixer()
+      ...options.plugins,
+      babel({
+        ...babelOptions,
+        plugins: [
+          ['@babel/plugin-transform-runtime', {
+            useESModules: true
+          }]
+        ],
+        presets: [
+          ['@babel/preset-env', {
+            corejs: 3,
+            modules: false,
+            useBuiltIns: 'usage',
+            targets: [
+              'last 2 versions',
+              'IE >= 11'
+            ]
+          }]
         ]
-      }),
-      typescript({
-        tsconfig: path.resolve(__dirname, 'tsconfig.build.json')
-      }),
-      css({ output: 'dist/index.css' })
+      })
+    ]
+  },
+  {
+    ...options,
+    input: 'src/index.runtime.ts',
+    output: {
+      file: 'dist/index.runtime.js',
+      format: 'umd',
+      esModule: false,
+      globals: {
+        vue: 'Vue'
+      },
+      name: 'VueUniversalModal',
+      exports: 'default'
+    },
+    plugins: [
+      ...options.plugins,
+      babel({
+        ...babelOptions,
+        plugins: [
+          '@babel/plugin-transform-runtime'
+        ],
+        presets: [
+          ['@babel/preset-env', {
+            corejs: 3,
+            useBuiltIns: 'usage',
+            targets: [
+              'last 2 versions',
+              'IE >= 11'
+            ]
+          }]
+        ]
+      })
     ]
   }
 ]
