@@ -26,7 +26,7 @@ import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   setup () {
-    const isShow = ref(true)
+    const isShow = ref(false)
     return { isShow }
   },
   methods: {
