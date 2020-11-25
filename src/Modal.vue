@@ -94,6 +94,7 @@ export default defineComponent({
 
     const closeKeyEvent = (event: KeyboardEvent) => {
       if (event.keyCode === closeKeyCode) {
+        if (modal.value !== document.querySelector<HTMLDivElement>(`.${CLASS_NAME}[data-latest]`)) return
         show.value = false
       }
     }
@@ -142,7 +143,7 @@ export default defineComponent({
         document.addEventListener('keyup', closeKeyEvent)
       }
 
-      watchEffect(() => setOrder)
+      watchEffect(() => setOrder())
     })
 
     onUnmounted(() => {
@@ -186,9 +187,14 @@ export default defineComponent({
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 50;
+  z-index: 51;
   background-color: rgba(#000, 0.8);
   text-align: left;
+
+  &:not([data-latest]) {
+    z-index: 50;
+    background: none !important;
+  }
 }
 
 .vue-universal-modal-content {
