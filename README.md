@@ -1,7 +1,5 @@
 # vue-universal-modal
 
-## ⚠️⚠️⚠️ **This plug-in is not yet complete and cannot be used as a product.** ⚠️⚠️⚠️
-
 Universal modal plugin for Vue@3
 
 > ⚠️ This plugin does not support Vue@2
@@ -81,12 +79,10 @@ Insert the component wrapped with the modal component. (Slot based)
 <template>
   <Modal>
   <!-- If the option changed modal component the name
-  <MyModal
-    ...
-  >
+  <MyModal>
   -->
     <div class="modal">
-      <h1>Hello</h1>
+      <h2>Hello</h2>
       <p>
         Vue Universal Modal
       </p>
@@ -96,10 +92,11 @@ Insert the component wrapped with the modal component. (Slot based)
 
 <style scoped lang="scss">
 .modal {
-  width: 50%;
-  padding: 50px;
-  background-color: #fff;
+  width: 300px;
+  padding: 30px;
   box-sizing: border-box;
+  background-color: #fff;
+  font-size: 20px;
   text-align: center;
 }
 </style>
@@ -110,58 +107,96 @@ Insert the component wrapped with the modal component. (Slot based)
 | name | type | detault | description |
 |- | - | - | - |
 | close | `function` | `() => {}` | Function to close a modal |
-| options | `object` | `{}` |  |
 | disabled | `boolean` | `false` | Handle visibility (as in v-show) |
+| options | `object` | `{}` |  |
 
 #### props.options
 
 | name | type | detault | description |
 |- | - | - | - |
-| transition | `number | false` | `300` | transition duration |
+| transition | `number &#124; false` | `300` | transition duration |
 | closeClickDimmed | `boolean` | `true` | Closes the modal when dimmed is clicked |
-| closeKeyCode | `number | false` | `27` | Handle just visibility (as in v-show) |
-| styleModal | `object` | `{}` | Inject modal window style (`.vue-universal-modal`) |
-| styleModalContent | `object` | `{}` | Inject modal content style (`.vue-universal-modal-content`) |
+| closeKeyCode | `number &#124; false` | `27` (esc) | Handle just visibility (as in v-show) |
+| styleModal | `object` | `{}` | Inject modal window style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">`.vue-universal-modal`</a>)|
+| styleModalContent | `object` | `{}` | Inject modal content style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">`.vue-universal-modal-content`</a>)|
 
 ### slot arguments
 
-The modal content is inserted into a slot and you can receive special arguments.
+There are slot arguments that can be used within modal content.
 
 | name | type | description |
 |- | - | - |
-| emitClose | function | Invoke close function passed to props<br>**(Call emit to run after transition end)** |
+| emitClose | function | The modal component must be unmount after the transitionEnd event.<br>So we need to pass the close function to props and run emitClose with logic wrapped. |
+
+```vue
+<template>
+  <p>
+    <button @click="showModal">
+      Show modal
+    </button>
+  </p>
+  <Modal
+    v-if="isShow"
+    v-slot="{ emitClose }"
+    :close="closeModal"
+  >
+    <div class="modal">
+      <p>
+        Hello
+      </p>
+      <button @click="emitClose">
+        close
+      </button>
+    </div>
+  </Modal>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const isShow = ref(false)
+    return { isShow }
+  },
+  methods: {
+    showModal () {
+      this.isShow = true
+    },
+    closeModal () {
+      this.isShow = false
+    }
+  }
+})
+</script>
+```
 
 ## Handle global CSS
 
-You can change it directly to your own style by referring to the `src/*.vue` or `dist/index.css`
+You can change it directly to your own style by referring to the <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">source</a>
 
 ```css
-/* Slide up transition when open modal */
-.vue-universal-modal-enter-from .vue-universal-modal-content {
-  transform: translate3d(0, 50px, 0);
-}
-.vue-universal-modal-enter-to .vue-universal-modal-content {
-  transform: translate3d(0, 0, 0);
-}
-
 .vue-universal-modal {
-  /* Change white dimmed */
-  background-color: rgba(255, 255, 255, 0.8);
+  /* Change dimmed color */
+  background-color: rgba(255, 255, 0, 0.3);
 }
 .vue-universal-modal-content {
-  /* Align to top (default flex-direction is column) */
+  /* Align to top (flex-direction property value is set to column) */
   justify-content: flex-start;
 }
 ```
 
-## Demo
+## Example
+
+* <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">source</a>
+* demo
 
 ## Todo
 
 * [x] Order states
-* [X] Semantic release
+* [x] Semantic release
+* [x] Make demo
 * [ ] TDD (vue-test-utils-next is still beta and is not fully compatible with teleport)
 * [ ] Support SSR (Test only until renderToString of the teleport component by holding the TDD)
 * [ ] Support IE11 (IE 11 support for Vue@3 is still pending)
-* [ ] Make demo
 * [ ] A11Y
