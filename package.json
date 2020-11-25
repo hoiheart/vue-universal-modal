@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "rollup --config",
+    "build": "rimraf ./dist && rollup --config",
     "test": "vue-cli-service test:unit",
     "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint",
@@ -52,6 +52,7 @@
     "eslint-plugin-standard": "^4.1.0",
     "eslint-plugin-vue": "^7.1.0",
     "lint-staged": "^9.5.0",
+    "rimraf": "^3.0.2",
     "rollup": "^2.33.1",
     "rollup-plugin-css-only": "^2.1.0",
     "rollup-plugin-typescript2": "^0.29.0",

@@ -2,7 +2,7 @@
 
 ## ⚠️⚠️⚠️ **This plug-in is not yet complete and cannot be used as a product.** ⚠️⚠️⚠️
 
-Universal modal plugin for Vue@3  
+Universal modal plugin for Vue@3
 
 > ⚠️ This plugin does not support Vue@2
 
@@ -24,8 +24,8 @@ Universal modal plugin for Vue@3
 ## Introduction
 
 `vue-universal-modal` plugin is based on the <a href="https://v3.vuejs.org/guide/teleport.html#teleport" target="_blank">teleport</a>.  
-It's very light and simple, but the focus is on providing the essential features needed between modal use in the application.
-(Such as Add & Remove, Visible & Hidden, Transition, Auto binding close, Support SSR, A11Y...)
+It is very light and simple, but it provides essential features for modal use in applications.  
+(Such as Add & Remove, Visible & Hidden, Transition, Auto bind keyboard and mouse to close, Support SSR, A11Y...)
 
 ## Install plugin
 
@@ -37,6 +37,7 @@ And install this plugin in vue application
 
 ```ts
 import VueUniversalModal from 'vue-universal-modal'
+// import VueUniversalModal from 'vue-universal-modal/dist/index.es5' // If need to use es5 build
 import 'vue-universal-modal/dist/index.css'
 
 app.use(VueUniversalModal)
