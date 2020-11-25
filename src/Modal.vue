@@ -2,16 +2,17 @@
   <teleport
     v-if="isCreatedTeleport"
     :to="`#${teleportComponentId}`"
+    :disabled="closed"
   >
     <transition
       :name="CLASS_NAME"
       appear
-      @after-leave="close"
+      @after-leave="setClose"
     >
       <div
         v-show="show"
         ref="modal"
-        :class="[CLASS_NAME, { active: show }]"
+        :class="[ CLASS_NAME ]"
         :style="{ transition, ...styleModal }"
       >
         <div
@@ -27,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, onMounted, onUnmounted, watch, watchEffect } from 'vue'
+import { defineComponent, inject, ref, onMounted, onUnmounted, watchEffect } from 'vue'
 import { PLUGIN_NAME, CLASS_NAME } from './index'
 
 import type { Provide } from './index'
@@ -64,7 +65,13 @@ export default defineComponent({
     const { teleportComponentId, isCreatedTeleport } = inject(PLUGIN_NAME) as Provide
 
     const modal = ref(null)
-    const show = ref(!props.disabled)
+    const show = ref(false)
+    const closed = ref(false)
+
+    watchEffect(() => {
+      show.value = !props.disabled
+      closed.value = props.disabled
+    })
 
     const options = {
       transition: 300,
@@ -78,10 +85,6 @@ export default defineComponent({
     const { closeClickDimmed, closeKeyCode, styleModal, styleModalContent } = options
     const transition = options.transition ? options.transition / 1000 + 's' : false
 
-    watch(() => props.disabled, (val) => {
-      show.value = !val
-    })
-
     const emitClose = () => {
       show.value = false
     }
@@ -94,56 +97,19 @@ export default defineComponent({
 
     const closeKeyEvent = (event: KeyboardEvent) => {
       if (event.keyCode === closeKeyCode) {
-        if (modal.value !== document.querySelector<HTMLDivElement>(`.${CLASS_NAME}[data-latest]`)) return
         show.value = false
       }
     }
 
-    const setOrder = () => {
-      if (show.value) {
-        const latestModal = document.querySelector<HTMLDivElement>(`.${CLASS_NAME}[data-latest]`)
-        delete latestModal?.dataset.latest
-
-        const el = modal.value
-
-        if (el) {
-          (el as HTMLElement).dataset.modified = Date.now().toString();
-          (el as HTMLElement).dataset.latest = ''
-        }
-      } else {
-        const el = modal.value
-
-        if (el) {
-          delete (el as HTMLElement).dataset.modified
-          delete (el as HTMLElement).dataset.latest
-        }
-
-        const activeModals = document.querySelectorAll<HTMLDivElement>(`.${CLASS_NAME}[data-modified]`)
-        let latestModal: HTMLDivElement | null = null
-
-        Array.from(activeModals).map((item) => {
-          if (!latestModal) {
-            latestModal = item
-          } else {
-            const a = new Date(Number(latestModal.dataset.modified))
-            const b = new Date(Number(item.dataset.modified))
-
-            if (b > a) latestModal = item
-          }
-        })
-
-        if (latestModal) {
-          (latestModal as HTMLDivElement).dataset.latest = ''
-        }
-      }
+    const setClose = () => {
+      props.close()
+      closed.value = true
     }
 
     onMounted(() => {
       if (closeKeyCode) {
         document.addEventListener('keyup', closeKeyEvent)
       }
-
-      watchEffect(() => setOrder())
     })
 
     onUnmounted(() => {
@@ -155,10 +121,12 @@ export default defineComponent({
     return {
       CLASS_NAME,
       emitClose,
+      closed,
+      show,
+      setClose,
       isCreatedTeleport,
       modal,
       onClickDimmed,
-      show,
       styleModal,
       styleModalContent,
       teleportComponentId,
@@ -191,7 +159,7 @@ export default defineComponent({
   background-color: rgba(#000, 0.8);
   text-align: left;
 
-  &:not([data-latest]) {
+  &:not(:last-child) {
     z-index: 50;
     background: none !important;
   }
