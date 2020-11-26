@@ -114,9 +114,9 @@ Insert the component wrapped with the modal component. (Slot based)
 
 | name | type | detault | description |
 |- | - | - | - |
-| transition | `number &#124; false` | `300` | transition duration |
+| transition | `number | false` | `300` | transition duration |
 | closeClickDimmed | `boolean` | `true` | Closes the modal when dimmed is clicked |
-| closeKeyCode | `number &#124; false` | `27` (esc) | Handle just visibility (as in v-show) |
+| closeKeyCode | `number | false` | `27` (esc) | Handle just visibility (as in v-show) |
 | styleModal | `object` | `{}` | Inject modal window style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">`.vue-universal-modal`</a>)|
 | styleModalContent | `object` | `{}` | Inject modal content style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">`.vue-universal-modal-content`</a>)|
 
