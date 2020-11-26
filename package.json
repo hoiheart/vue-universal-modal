@@ -72,7 +72,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,vue,ts,tsx}": [
+    "src/**/*.{vue,ts,tsx}": [
       "vue-cli-service lint"
     ]
   },
