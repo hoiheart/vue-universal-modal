@@ -1,3 +1,3 @@
 export default {
-  outDir: 'demo'
+  outDir: 'docs'
 }
