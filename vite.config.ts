@@ -1,3 +1,4 @@
 export default {
-  outDir: 'docs'
+  outDir: 'docs',
+  assetsDir: './'
 }
