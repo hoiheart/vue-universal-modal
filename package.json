@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "rimraf ./dist && rollup --config",
-    "build:demo": "rimraf ./demo && vite build",
+    "build:docs": "rimraf ./docs && vite build",
     "test": "vue-cli-service test:unit",
     "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint",
@@ -72,27 +72,9 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,vue,ts,tsx}": [
+    "src/**/*.{vue,ts,tsx}": [
       "vue-cli-service lint"
     ]
   },
-  "dependencies": {},
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/git",
-        {
-          "assets": [
-            "package.json",
-            "package-lock.json"
-          ],
-          "message": "chore(release): ${nextRelease.version}"
-        }
-      ],
-      "@semantic-release/npm",
-      "@semantic-release/github"
-    ]
-  }
+  "dependencies": {}
 }
