@@ -155,7 +155,7 @@ export default defineComponent({
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 51;
+  z-index: 52;
   background-color: rgba(#000, 0.8);
   text-align: left;
 
