@@ -5,8 +5,8 @@ on:
       - master
       - alpha
 jobs:
-  change:
-    name: change
+  changes:
+    name: changes
     runs-on: ubuntu-latest
     outputs:
       src: ${{ steps.filter.outputs.src }}
@@ -20,7 +20,7 @@ jobs:
   release:
     name: release
     runs-on: ubuntu-latest
-    needs: change
+    needs: changes
     if: ${{ needs.changes.outputs.src == 'true' }}
     steps:
       - name: Checkout
