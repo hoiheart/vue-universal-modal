@@ -1,12 +1,21 @@
 {
   "name": "vue-universal-modal",
   "version": "0.0.0",
-  "description": "",
+  "description": "Universal modal plugin for Vue@3",
+  "keywords": [
+    "Vue",
+    "VueJS",
+    "Vue3",
+    "modal",
+    "Vue modal",
+    "VueJS modal",
+    "Vue3 modal"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "dev": "vite",
     "build": "rimraf ./dist && rollup --config",
-    "build:docs": "rimraf ./docs && vite build",
+    "build:demo": "rimraf ./demo && vite build",
     "test": "vue-cli-service test:unit",
     "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint",
@@ -16,7 +25,11 @@
     "type": "git",
     "url": "https://github.com/hoiheart/vue-universal-modal.git"
   },
-  "author": "",
+  "author": {
+    "name": "hoiheart",
+    "email": "hoiheart@gmail.com",
+    "url": "https://github.com/hoiheart"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/hoiheart/vue-universal-modal/issues"
@@ -76,5 +89,19 @@
       "vue-cli-service lint"
     ]
   },
-  "dependencies": {}
+  "dependencies": {},
+  "release": {
+    "branches": ["master", "alpha"],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      ["@semantic-release/github", {
+        "assets": [
+          {"path": "dist", "label": "dist"},
+          {"path": "demo", "label": "demo"}
+        ]
+      }]
+    ]
+  }
 }
