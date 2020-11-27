@@ -14,6 +14,11 @@
         ref="modal"
         :class="[ CLASS_NAME ]"
         :style="{ transition, ...styleModal }"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="!ariaLabelledby && 'Modal window'"
+        :aria-labelledby="ariaLabelledby"
+        tabindex="-1"
       >
         <div
           :class="`${CLASS_NAME}-content`"
@@ -28,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, onMounted, onUnmounted, watchEffect } from 'vue'
+import { defineComponent, inject, ref, onMounted, onUnmounted, watch } from 'vue'
 import { PLUGIN_NAME, CLASS_NAME } from './index'
 
 import type { Provide } from './index'
@@ -59,16 +64,20 @@ export default defineComponent({
     disabled: { // Handle visibility
       type: Boolean,
       default: false
+    },
+    ariaLabelledby: { // aria label id
+      type: String,
+      default: ''
     }
   },
   setup (props) {
     const { teleportComponentId, isCreatedTeleport } = inject(PLUGIN_NAME) as Provide
 
     const modal = ref(null)
-    const show = ref(false)
-    const closed = ref(false)
+    const show = ref(!props.disabled)
+    const closed = ref(props.disabled)
 
-    watchEffect(() => {
+    watch(() => props.disabled, () => {
       show.value = !props.disabled
       closed.value = props.disabled
     })
@@ -110,6 +119,22 @@ export default defineComponent({
       if (closeKeyCode) {
         document.addEventListener('keyup', closeKeyEvent)
       }
+
+      // set aria focus
+      let activeElement: Element | null
+      const setAriaFocus = (value: boolean) => {
+        if (value) {
+          activeElement = document.activeElement;
+          (modal.value as unknown as HTMLElement).focus()
+        } else {
+          if (activeElement) (activeElement as HTMLElement).focus()
+        }
+      }
+
+      if (show.value) setAriaFocus(show.value)
+      watch(show, (value) => {
+        setAriaFocus(value)
+      })
     })
 
     onUnmounted(() => {
