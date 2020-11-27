@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "vite",
     "build": "rimraf ./dist && rollup --config",
-    "build:demo": "rimraf ./demo && vite build",
+    "demo": "rimraf ./demo && vite build",
     "test": "vue-cli-service test:unit",
     "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint",
