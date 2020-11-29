@@ -35,6 +35,7 @@ import { defineComponent, ref } from 'vue'
 export default defineComponent({
   setup () {
     const isShow = ref(false)
+
     const options = {
       transition: false,
       closeClickDimmed: false,
@@ -42,14 +43,20 @@ export default defineComponent({
       styleModal: { backgroundColor: 'rgba(255, 255, 0, 0.3)' },
       styleModalContent: { justifyContent: 'flex-start' }
     }
-    return { isShow, options }
-  },
-  methods: {
-    showModal () {
-      this.isShow = true
-    },
-    closeModal () {
-      this.isShow = false
+
+    function showModal () {
+      isShow.value = true
+    }
+
+    function closeModal () {
+      isShow.value = false
+    }
+
+    return {
+      isShow,
+      options,
+      showModal,
+      closeModal
     }
   }
 })

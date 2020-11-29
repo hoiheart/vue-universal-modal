@@ -98,8 +98,8 @@
       "@semantic-release/npm",
       ["@semantic-release/github", {
         "assets": [
-          {"path": "dist", "label": "dist"},
-          {"path": "demo", "label": "demo"}
+          {"path": "dist/**", "label": "dist"},
+          {"path": "demo/**", "label": "demo"}
         ]
       }]
     ]

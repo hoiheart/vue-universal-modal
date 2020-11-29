@@ -160,14 +160,19 @@ import { defineComponent, ref } from 'vue'
 export default defineComponent({
   setup () {
     const isShow = ref(false)
-    return { isShow }
-  },
-  methods: {
-    showModal () {
-      this.isShow = true
-    },
-    closeModal () {
-      this.isShow = false
+
+    function showModal () {
+      isShow.value = true
+    }
+
+    function closeModal () {
+      isShow.value = false
+    }
+
+    return {
+      isShow,
+      showModal,
+      closeModal
     }
   }
 })
