@@ -197,7 +197,7 @@ You can change it directly to your own style by referring to the <a href="https:
 ## Example
 
 * <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">source</a>
-* <a href="https://hoiheart.github.io/vue-universal-modal/demo/" target="_blank">demo</a>
+* <a href="https://hoiheart.github.io/vue-universal-modal/" target="_blank">demo</a>
 
 ## Todo
 
