@@ -109,6 +109,9 @@ Insert the component wrapped with the modal component. (Slot based)
 | close | `function` | `() => {}` | Function to close a modal |
 | disabled | `boolean` | `false` | Handle visibility (as in v-show) |
 | options | `object` | `{}` |  |
+| id | `string` | `''` |  | modal id
+| class | `string` | `''` |  | modal class
+| ariaLabelledby | `string` | `''` | Applying modal heading id helps with accessibility. |
 
 #### props.options
 
@@ -196,7 +199,7 @@ You can change it directly to your own style by referring to the <a href="https:
 * [x] Order states
 * [x] Semantic release
 * [x] Make demo
+* [x] A11Y
 * [ ] TDD (vue-test-utils-next is still beta and is not fully compatible with teleport)
 * [ ] Support SSR (Test only until renderToString of the teleport component by holding the TDD)
 * [ ] Support IE11 (IE 11 support for Vue@3 is still pending)
-* [ ] A11Y

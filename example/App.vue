@@ -5,6 +5,7 @@
   <Example3 />
   <Example4 />
   <Example5 />
+  <Example6 />
   <VueUniversalModal />
 </template>
 
@@ -15,6 +16,7 @@ import Example2 from './2.visible.vue'
 import Example3 from './3.options.vue'
 import Example4 from './4.modal.on.modal.vue'
 import Example5 from './5.custom.animation.vue'
+import Example6 from './6.wai-aria.vue'
 
 export default defineComponent({
   components: {
@@ -22,7 +24,8 @@ export default defineComponent({
     Example2,
     Example3,
     Example4,
-    Example5
+    Example5,
+    Example6
   }
 })
 </script>
@@ -70,8 +73,8 @@ button {
 }
 button:focus,
 button:hover {
-  border-color: #015baf;
-  color: #015baf;
+  border-color: #03498b;
+  color: #03498b;
 }
 
 .modal {
