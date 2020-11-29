@@ -1,4 +1,4 @@
 export default {
-  outDir: 'demo',
-  base: '/vue-universal-modal/demo/'
+  outDir: 'docs',
+  base: '/vue-universal-modal/'
 }
