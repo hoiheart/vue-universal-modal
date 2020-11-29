@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "vite",
     "build": "rimraf ./dist && rollup --config",
-    "demo": "rimraf ./demo && vite build",
+    "demo": "rimraf ./docs && vite build",
     "test": "vue-cli-service test:unit",
     "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint",
@@ -99,7 +99,7 @@
       ["@semantic-release/github", {
         "assets": [
           {"path": "dist/**", "label": "dist"},
-          {"path": "demo/**", "label": "demo"}
+          {"path": "docs/**", "label": "demo"}
         ]
       }]
     ]

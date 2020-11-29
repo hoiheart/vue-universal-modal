@@ -41,7 +41,7 @@ jobs:
       - name: Build
         run: npm run build
       # - name: Demo
-      #   run: npm run build
+      #   run: npm run demo
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
