@@ -2,7 +2,7 @@
   <teleport
     v-if="isCreatedTeleport"
     :to="`#${teleportComponentId}`"
-    :disabled="closed"
+    :disabled="state.closed"
   >
     <transition
       :name="CLASS_NAME"
@@ -10,11 +10,11 @@
       @after-leave="setClose"
     >
       <div
-        v-show="show"
+        v-show="state.show"
         :id="id"
         ref="modal"
-        :class="[ CLASS_NAME, className ]"
-        :style="{ transition, ...styleModal }"
+        :class="[ CLASS_NAME, state.className ]"
+        :style="{ transition, ...mergeOptions.styleModal }"
         role="dialog"
         aria-modal="true"
         :aria-label="!ariaLabelledby && 'Modal window'"
@@ -23,7 +23,7 @@
       >
         <div
           :class="`${CLASS_NAME}-content`"
-          :style="{ transition, ...styleModalContent }"
+          :style="{ transition, ...mergeOptions.styleModalContent }"
           @click.self="onClickDimmed"
         >
           <slot :emitClose="emitClose" />
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, onMounted, onUnmounted, watch } from 'vue'
+import { defineComponent, inject, reactive, ref, onMounted, onUnmounted, watch } from 'vue'
 import { PLUGIN_NAME, CLASS_NAME } from './index'
 
 import type { Provide } from './index'
@@ -49,32 +49,32 @@ interface Options {
 
 export default defineComponent({
   props: {
-    close: { // Close function
+    close: {
       type: Function,
       required: true,
       default: () => {
         return undefined
       }
     },
-    options: { // Modal options
+    options: {
       type: Object,
       default: () => {
         return {}
       }
     },
-    disabled: { // Handle visibility
+    disabled: {
       type: Boolean,
       default: false
     },
-    id: { // id
+    id: {
       type: String,
       default: ''
     },
-    class: { // class name
+    class: {
       type: String,
       default: ''
     },
-    ariaLabelledby: { // aria label id
+    ariaLabelledby: {
       type: String,
       default: ''
     }
@@ -83,16 +83,19 @@ export default defineComponent({
     const { teleportComponentId, isCreatedTeleport } = inject(PLUGIN_NAME) as Provide
 
     const modal = ref(null)
-    const show = ref(!props.disabled)
-    const closed = ref(props.disabled)
-    const className = ref(props.class)
 
-    watch(() => props.disabled, () => {
-      show.value = !props.disabled
-      closed.value = props.disabled
+    const state = reactive({
+      show: !props.disabled,
+      closed: props.disabled,
+      className: props.class
     })
 
-    const options = {
+    watch(() => props.disabled, () => {
+      state.show = !props.disabled
+      state.closed = props.disabled
+    })
+
+    const mergeOptions = {
       transition: 300,
       closeClickDimmed: true,
       closeKeyCode: 27,
@@ -101,28 +104,28 @@ export default defineComponent({
       ...props.options
     } as Options
 
-    const { closeClickDimmed, closeKeyCode, styleModal, styleModalContent } = options
-    const transition = options.transition ? options.transition / 1000 + 's' : false
+    const { closeClickDimmed, closeKeyCode } = mergeOptions
+    const transition = mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false
 
-    const emitClose = () => {
-      show.value = false
+    function emitClose () {
+      state.show = false
     }
 
-    const onClickDimmed = () => {
+    function onClickDimmed () {
       if (closeClickDimmed) {
-        show.value = false
+        state.show = false
       }
     }
 
-    const closeKeyEvent = (event: KeyboardEvent) => {
+    function closeKeyEvent (event: KeyboardEvent) {
       if (event.keyCode === closeKeyCode) {
-        show.value = false
+        state.show = false
       }
     }
 
-    const setClose = () => {
+    function setClose () {
       props.close()
-      closed.value = true
+      state.closed = true
     }
 
     onMounted(() => {
@@ -132,7 +135,7 @@ export default defineComponent({
 
       // set aria focus
       let activeElement: Element | null
-      const setAriaFocus = (value: boolean) => {
+      function setAriaFocus (value: boolean) {
         if (value) {
           activeElement = document.activeElement;
           (modal.value as unknown as HTMLElement).focus()
@@ -141,8 +144,8 @@ export default defineComponent({
         }
       }
 
-      if (show.value) setAriaFocus(show.value)
-      watch(show, (value) => {
+      if (state.show) setAriaFocus(state.show)
+      watch(() => state.show, (value) => {
         setAriaFocus(value)
       })
     })
@@ -155,17 +158,14 @@ export default defineComponent({
 
     return {
       CLASS_NAME,
-      className,
-      emitClose,
-      closed,
-      show,
-      setClose,
+      teleportComponentId,
       isCreatedTeleport,
       modal,
+      state,
+      emitClose,
+      setClose,
       onClickDimmed,
-      styleModal,
-      styleModalContent,
-      teleportComponentId,
+      mergeOptions,
       transition
     }
   }

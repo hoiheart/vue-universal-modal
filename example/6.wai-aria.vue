@@ -1,17 +1,17 @@
 <template>
   <h2>6. wai-aria</h2>
   <p>
-    <button @click="showModal1">
+    <button @click="showModal('modal1')">
       Show modal1
     </button>
   </p>
   <Modal
-    v-if="isShowModal1"
+    v-if="isShowModal.modal1"
     id="aria-modal1"
     v-slot="{ emitClose }"
     class="aria-modal aria-modal1"
     aria-labelledby="heading-modal1"
-    :close="closeModal1"
+    :close="() => closeModal('modal1')"
   >
     <div class="modal">
       <h2 id="heading-modal1">
@@ -19,7 +19,7 @@
       </h2>
       <button
         :style="{ marginRight: '10px' }"
-        @click="showModal2"
+        @click="showModal('modal2')"
       >
         open modal2
       </button>
@@ -29,12 +29,12 @@
     </div>
   </Modal>
   <Modal
-    v-if="isShowModal2"
+    v-if="isShowModal.modal2"
     id="aria-modal2"
     v-slot="{ emitClose }"
     class="aria-modal aria-modal2"
     aria-labelledby="heading-modal2"
-    :close="closeModal2"
+    :close="() => closeModal('modal2')"
   >
     <div class="modal">
       <h2 id="heading-modal2">
@@ -48,26 +48,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive } from 'vue'
 
 export default defineComponent({
   setup () {
-    const isShowModal1 = ref(false)
-    const isShowModal2 = ref(false)
-    return { isShowModal1, isShowModal2 }
-  },
-  methods: {
-    showModal1 () {
-      this.isShowModal1 = true
-    },
-    closeModal1 () {
-      this.isShowModal1 = false
-    },
-    showModal2 () {
-      this.isShowModal2 = true
-    },
-    closeModal2 () {
-      this.isShowModal2 = false
+    const isShowModal = reactive({
+      modal1: false,
+      modal2: false
+    })
+
+    function showModal (key: 'modal1' | 'modal2') {
+      isShowModal[key] = true
+    }
+
+    function closeModal (key: 'modal1' | 'modal2') {
+      isShowModal[key] = false
+    }
+
+    return {
+      isShowModal,
+      showModal,
+      closeModal
     }
   }
 })
@@ -77,7 +78,7 @@ export default defineComponent({
 #aria-modal1,
 #aria-modal2 {
   &:focus {
-    border: 5px solid #fff;
+    border: 15px solid #fff;
   }
 }
 </style>

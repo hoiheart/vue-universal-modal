@@ -1,14 +1,14 @@
 <template>
   <h2>4. modal in modal</h2>
   <p>
-    <button @click="showModal1">
+    <button @click="showModal('modal1')">
       Show modal1
     </button>
   </p>
   <Modal
-    v-if="isShowModal1"
+    v-if="isShowModal.modal1"
     v-slot="{ emitClose }"
-    :close="closeModal1"
+    :close="() => closeModal('modal1')"
   >
     <div class="modal">
       <p>
@@ -16,7 +16,7 @@
       </p>
       <button
         :style="{ marginRight: '10px' }"
-        @click="showModal2"
+        @click="showModal('modal2')"
       >
         open modal2
       </button>
@@ -26,9 +26,9 @@
     </div>
   </Modal>
   <Modal
-    v-if="isShowModal2"
+    v-if="isShowModal.modal2"
     v-slot="{ emitClose }"
-    :close="closeModal2"
+    :close="() => closeModal('modal2')"
   >
     <div class="modal">
       <p>
@@ -42,26 +42,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive } from 'vue'
 
 export default defineComponent({
   setup () {
-    const isShowModal1 = ref(false)
-    const isShowModal2 = ref(false)
-    return { isShowModal1, isShowModal2 }
-  },
-  methods: {
-    showModal1 () {
-      this.isShowModal1 = true
-    },
-    closeModal1 () {
-      this.isShowModal1 = false
-    },
-    showModal2 () {
-      this.isShowModal2 = true
-    },
-    closeModal2 () {
-      this.isShowModal2 = false
+    const isShowModal = reactive({
+      modal1: false,
+      modal2: false
+    })
+
+    function showModal (key: 'modal1' | 'modal2') {
+      isShowModal[key] = true
+    }
+
+    function closeModal (key: 'modal1' | 'modal2') {
+      isShowModal[key] = false
+    }
+
+    return {
+      isShowModal,
+      showModal,
+      closeModal
     }
   }
 })
