@@ -11,8 +11,9 @@
     >
       <div
         v-show="show"
+        :id="id"
         ref="modal"
-        :class="[ CLASS_NAME ]"
+        :class="[ CLASS_NAME, className ]"
         :style="{ transition, ...styleModal }"
         role="dialog"
         aria-modal="true"
@@ -65,6 +66,14 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    id: { // id
+      type: String,
+      default: ''
+    },
+    class: { // class name
+      type: String,
+      default: ''
+    },
     ariaLabelledby: { // aria label id
       type: String,
       default: ''
@@ -76,6 +85,7 @@ export default defineComponent({
     const modal = ref(null)
     const show = ref(!props.disabled)
     const closed = ref(props.disabled)
+    const className = ref(props.class)
 
     watch(() => props.disabled, () => {
       show.value = !props.disabled
@@ -145,6 +155,7 @@ export default defineComponent({
 
     return {
       CLASS_NAME,
+      className,
       emitClose,
       closed,
       show,
