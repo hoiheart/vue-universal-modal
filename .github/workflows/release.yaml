@@ -40,10 +40,13 @@ jobs:
         run: npm run test
       - name: Build
         run: npm run build
-      # - name: Demo
-      #   run: npm run demo
+      - name: Demo
+        run: npm run demo
       - name: Release
+        uses: cycjimmy/semantic-release-action@v2
+        with:
+          extra_plugins: |
+            @semantic-release/git
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm run semantic-release

@@ -13,7 +13,11 @@
         v-show="state.show"
         :id="id"
         ref="modal"
-        :class="[ CLASS_NAME, state.className ]"
+        :class="[
+          CLASS_NAME,
+          { [`${CLASS_NAME}-show`]: state.show},
+          state.className
+        ]"
         :style="{ transition, ...mergeOptions.styleModal }"
         role="dialog"
         aria-modal="true"
@@ -118,7 +122,9 @@ export default defineComponent({
     }
 
     function closeKeyEvent (event: KeyboardEvent) {
-      if (event.keyCode === closeKeyCode) {
+      const isLastChild = document.querySelector(`#${teleportComponentId} .${CLASS_NAME}:last-child`) === modal.value
+
+      if (event.keyCode === closeKeyCode && isLastChild) {
         state.show = false
       }
     }
@@ -137,10 +143,14 @@ export default defineComponent({
       let activeElement: Element | null
       function setAriaFocus (value: boolean) {
         if (value) {
-          activeElement = document.activeElement;
-          (modal.value as unknown as HTMLElement).focus()
+          activeElement = document.activeElement
+          if (activeElement && modal.value) {
+            (modal.value as unknown as HTMLElement).focus()
+          }
         } else {
-          if (activeElement) (activeElement as HTMLElement).focus()
+          if (activeElement) {
+            (activeElement as HTMLElement).focus()
+          }
         }
       }
 
@@ -191,11 +201,11 @@ export default defineComponent({
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 52;
+  z-index: 51;
   background-color: rgba(#000, 0.8);
   text-align: left;
 
-  &:not(:last-child) {
+  &.vue-universal-modal-show:not(:last-child) {
     z-index: 50;
     background: none !important;
   }
