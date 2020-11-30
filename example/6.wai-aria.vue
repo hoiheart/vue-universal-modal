@@ -84,7 +84,8 @@ export default defineComponent({
 </style>
 
 <style scoped lang="scss">
-button:focus {
+button:focus,
+button:active {
   background-color: #1890ff;
   color: #fff;
 }
