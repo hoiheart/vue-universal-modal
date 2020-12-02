@@ -103,5 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-# Demo
-demo
+# ignore
+/demo
+/dist
