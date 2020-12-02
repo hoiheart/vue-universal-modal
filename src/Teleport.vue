@@ -1,5 +1,8 @@
 <template>
-  <div :id="teleportComponentId" />
+  <div
+    :id="teleportComponentId"
+    ref="teleportRef"
+  />
 </template>
 
 <script lang="ts">
@@ -10,12 +13,11 @@ import type { Provide } from './index'
 
 export default defineComponent({
   setup () {
-    const { teleportComponentId, isCreatedTeleport } = inject(PLUGIN_NAME) as Provide
-
-    isCreatedTeleport.value = true
+    const { teleportComponentId, teleportRef } = inject(PLUGIN_NAME) as Provide
 
     return {
-      teleportComponentId
+      teleportComponentId,
+      teleportRef
     }
   }
 })

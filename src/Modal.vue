@@ -1,7 +1,7 @@
 <template>
   <teleport
-    v-if="isCreatedTeleport"
-    :to="`#${teleportComponentId}`"
+    v-if="teleportRef"
+    :to="teleportRef"
     :disabled="state.closed"
   >
     <transition
@@ -47,8 +47,8 @@ interface Options {
   transition: number | false;
   closeKeyCode: number | false;
   closeClickDimmed: boolean;
-  styleModal: object;
-  styleModalContent: object;
+  styleModal: {[key: string]: string};
+  styleModalContent: {[key: string]: string};
 }
 
 export default defineComponent({
@@ -84,7 +84,7 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const { teleportComponentId, isCreatedTeleport } = inject(PLUGIN_NAME) as Provide
+    const { teleportRef } = inject(PLUGIN_NAME) as Provide
 
     const modal = ref(null)
 
@@ -122,7 +122,7 @@ export default defineComponent({
     }
 
     function closeKeyEvent (event: KeyboardEvent) {
-      const isLastChild = document.querySelector(`#${teleportComponentId} .${CLASS_NAME}:last-child`) === modal.value
+      const isLastChild = teleportRef.value?.querySelector(`.${CLASS_NAME}:last-child`) === modal.value
 
       if (event.keyCode === closeKeyCode && isLastChild) {
         state.show = false
@@ -168,8 +168,7 @@ export default defineComponent({
 
     return {
       CLASS_NAME,
-      teleportComponentId,
-      isCreatedTeleport,
+      teleportRef,
       modal,
       state,
       emitClose,
