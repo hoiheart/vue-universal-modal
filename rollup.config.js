@@ -61,11 +61,7 @@ export default [
           ['@babel/preset-env', {
             corejs: 3,
             modules: false,
-            useBuiltIns: 'usage',
-            targets: [
-              'last 2 versions',
-              'IE >= 11'
-            ]
+            useBuiltIns: 'usage'
           }]
         ]
       })
@@ -94,11 +90,7 @@ export default [
         presets: [
           ['@babel/preset-env', {
             corejs: 3,
-            useBuiltIns: 'usage',
-            targets: [
-              'last 2 versions',
-              'IE >= 11'
-            ]
+            useBuiltIns: 'usage'
           }]
         ]
       })
