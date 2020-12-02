@@ -206,6 +206,6 @@ You can change it directly to your own style by referring to the <a href="https:
 * [x] Semantic release
 * [x] Make demo
 * [x] A11Y
-* [ ] TDD (vue-test-utils-next is still beta and is not fully compatible with teleport)
-* [ ] Support SSR (Test only until renderToString of the teleport component by holding the TDD)
+* [ ] TDD (Need more test cases)
+* [ ] Support SSR (Test only until renderToString of the teleport component)
 * [ ] Support IE11 (IE 11 support for Vue@3 is still pending)
