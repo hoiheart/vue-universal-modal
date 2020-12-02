@@ -3,8 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vue universal modal</title>
+  <title>Vue universal modal runtime demo</title>
   <link rel="stylesheet" href="https://unpkg.com/vue-universal-modal/dist/index.css">
+  <style type="text/css">
+    .modal {
+      width: 300px;
+      padding: 30px;
+      box-sizing: border-box;
+      background-color: #fff;
+      font-size: 20px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
   <div id="app"></div>
@@ -12,7 +22,7 @@
   <script src="https://unpkg.com/vue-universal-modal/dist/index.runtime.js"></script>
   <script>
     var app = Vue.createApp({
-      template: '<Modal>test</Modal><VueUniversalModal />'
+      template: '<Modal><div class="modal"><h2>Hello</h2><p>Vue Universal Modal</p></div></Modal><VueUniversalModal />'
     })
     app.use(VueUniversalModal)
     app.mount('#app')
