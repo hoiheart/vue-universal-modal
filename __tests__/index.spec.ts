@@ -1,13 +1,14 @@
 import { mount } from '@vue/test-utils'
 import VueUniversalModal from '../src/index'
 
-import { createSSRApp } from 'vue'
+import { createSSRApp, nextTick } from 'vue'
 import { renderToString } from '@vue/server-renderer'
 
 describe('Unit test', () => {
-  it('Install plugin', () => {
+  it('Install plugin', async () => {
     const wrapper = mount({
       template: `
+        <Modal>hello</Modal>
         <VueUniversalModal />
       `
     }, {
@@ -17,12 +18,15 @@ describe('Unit test', () => {
         ]
       }
     })
+    await nextTick()
     expect(wrapper.find('#vue-universal-modal-teleport').exists()).toBe(true)
+    expect(wrapper.find('#vue-universal-modal-teleport .vue-universal-modal-content').html()).toContain('hello')
   })
 
-  it('Install plugin with options', () => {
+  it('Install plugin with options', async () => {
     const wrapper = mount({
       template: `
+        <MyModal>hello</MyModal>
         <MyModalTeleport />
       `
     }, {
@@ -31,14 +35,17 @@ describe('Unit test', () => {
           [VueUniversalModal, {
             teleportComponent: 'MyModalTeleport',
             teleportComponentId: 'my-modal-teleport',
-            modalComponent: 'Modal'
+            modalComponent: 'MyModal'
           }]
         ]
       }
     })
+    await nextTick()
+    console.log(wrapper.html())
     expect(wrapper.find('#my-modal-teleport').exists()).toBe(true)
+    expect(wrapper.find('#my-modal-teleport .vue-universal-modal-content').html()).toContain('hello')
   })
-  // todo: The modal component test
+  // todo: more test case
 })
 
 describe('Support SSR', () => {
@@ -67,5 +74,5 @@ describe('Support SSR', () => {
     const html = await renderToString(app)
     expect(html).toBe('<div id="my-modal-teleport"></div>')
   })
-  // todo: The modal component test
+  // todo: The modal component test case
 })

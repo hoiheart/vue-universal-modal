@@ -12,7 +12,7 @@ interface PluginOptions {
 
 interface Provide {
   teleportComponentId: string;
-  isCreatedTeleport: Ref;
+  teleportRef: Ref;
 }
 
 const PLUGIN_NAME = 'VueUniversalModal'
@@ -28,7 +28,7 @@ export default {
 
     app.provide(PLUGIN_NAME, {
       teleportComponentId,
-      isCreatedTeleport: ref(false)
+      teleportRef: ref()
     })
 
     app.component(teleportComponent, Teleport)
