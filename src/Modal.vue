@@ -194,6 +194,9 @@ export default defineComponent({
 
 .vue-universal-modal {
   -webkit-overflow-scrolling: touch;
+  // prevent scroll chaining
+  // Ios is not supported, but preparations continue to be made for feature mounting (https://bugs.webkit.org/show_bug.cgi?id=176454)
+  overscroll-behavior: contain;
   position: fixed;
   overflow-y: auto;
   left: 0;
