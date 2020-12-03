@@ -75,4 +75,29 @@ describe('Support SSR', () => {
     expect(html).toBe('<div id="my-modal-teleport"></div>')
   })
   // todo: The modal component test case
+  // it('Install plugin', async () => {
+  //   const ctx: SSRContext = {}
+  //   const html = await renderToString(
+  //     createApp({
+  //       setup() {
+  //         const svg = ref()
+  //         const circle = ref()
+  
+  //         return {
+  //           svg,
+  //           circle
+  //         }
+  //       },
+  //       template: `
+  //         <svg ref="svg"></svg>
+  //         <teleport :to="svg" v-if="svg">
+  //           <circle ref="circle"></circle>
+  //         </teleport>
+  //       `
+  //     }),
+  //     ctx
+  //   )
+  //   console.log(html)
+  //   console.log(ctx)
+  // })
 })
