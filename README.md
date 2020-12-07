@@ -1,8 +1,8 @@
 # vue-universal-modal
 
-Universal modal plugin for Vue@3
+Universal modal plugin for Vue3
 
-> ⚠️ This plugin does not support Vue@2
+> ⚠️ This plugin does not support Vue2
 
 ## Table of Contents
 
