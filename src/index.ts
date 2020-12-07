@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, reactive, readonly } from 'vue'
 import Teleport from './Teleport.vue'
 import Modal from './Modal.vue'
 
@@ -9,10 +9,12 @@ interface PluginOptions {
   teleportComponentId: string;
   modalComponent: string;
 }
-
 interface Provide {
   teleportComponentId: string;
   teleportRef: Ref;
+  visibleModals: Ref<number[]>;
+  addVisibleModals: (id: number) => void
+  removeVisibleModals: (id: number) => void
 }
 
 const PLUGIN_NAME = 'VueUniversalModal'
@@ -26,9 +28,22 @@ export default {
       modalComponent = 'Modal'
     } = options as PluginOptions
 
+    const visibleModals: Ref<number[]> = ref([])
+    const addVisibleModals = (id: number) => {
+      visibleModals.value = [...visibleModals.value, id]
+    }
+    const removeVisibleModals = (id: number) => {
+      const modals = [...visibleModals.value]
+      modals.splice(visibleModals.value.indexOf(id), 1)
+      visibleModals.value = [...modals]
+    }
+
     app.provide(PLUGIN_NAME, {
       teleportComponentId,
-      teleportRef: ref()
+      teleportRef: ref(),
+      visibleModals: readonly(visibleModals),
+      addVisibleModals,
+      removeVisibleModals
     })
 
     app.component(teleportComponent, Teleport)
