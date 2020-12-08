@@ -1,7 +1,6 @@
 <template>
   <teleport
-    v-if="teleportRef"
-    :to="teleportRef"
+    :to="teleportTarget"
     :disabled="disabled"
   >
     <transition
@@ -91,7 +90,7 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const { teleportRef, visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME) as Provide
+    const { teleportTarget, visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME) as Provide
     const { uid } = getCurrentInstance() || {}
     const modalRef = ref(null)
     const show = ref(!props.disabled)
@@ -176,7 +175,7 @@ export default defineComponent({
     return {
       CLASS_NAME,
       className: props.class,
-      teleportRef,
+      teleportTarget,
       modalRef,
       show,
       latest,
