@@ -1,103 +1,66 @@
 import { mount } from '@vue/test-utils'
+import { JSDOM } from 'jsdom'
 import VueUniversalModal from '../src/index'
 
-import { createSSRApp, nextTick } from 'vue'
-import { renderToString } from '@vue/server-renderer'
+import { createApp, nextTick } from 'vue'
+import { renderToString, SSRContext } from '@vue/server-renderer'
+
+const html = '<div id="modals"></div>'
 
 describe('Unit test', () => {
   it('Install plugin', async () => {
+    document.body.innerHTML = html
     const wrapper = mount({
-      template: `
-        <Modal>hello</Modal>
-        <VueUniversalModal />
-      `
-    }, {
-      global: {
-        plugins: [
-          VueUniversalModal
-        ]
-      }
-    })
-    await nextTick()
-    expect(wrapper.find('#vue-universal-modal-teleport').exists()).toBe(true)
-    expect(wrapper.find('#vue-universal-modal-teleport .vue-universal-modal-content').html()).toContain('hello')
-  })
-
-  it('Install plugin with options', async () => {
-    const wrapper = mount({
-      template: `
-        <MyModal>hello</MyModal>
-        <MyModalTeleport />
-      `
+      template: '<Modal>hello</Modal>'
     }, {
       global: {
         plugins: [
           [VueUniversalModal, {
-            teleportComponent: 'MyModalTeleport',
-            teleportComponentId: 'my-modal-teleport',
+            teleportTarget: '#modals'
+          }]
+        ]
+      }
+    })
+    const { document: dom } = new JSDOM(document.body.innerHTML).window
+    const modalsList = Array.from(dom.querySelectorAll('#modals .vue-universal-modal'))
+    expect(modalsList.length).toBe(1)
+    expect(modalsList[0].textContent).toBe('hello')
+  })
+
+  it('Install plugin with options', async () => {
+    document.body.innerHTML = html
+    const wrapper = mount({
+      template: '<MyModal>hello</MyModal>'
+    }, {
+      global: {
+        plugins: [
+          [VueUniversalModal, {
+            teleportTarget: '#modals',
             modalComponent: 'MyModal'
           }]
         ]
       }
     })
-    await nextTick()
-    console.log(wrapper.html())
-    expect(wrapper.find('#my-modal-teleport').exists()).toBe(true)
-    expect(wrapper.find('#my-modal-teleport .vue-universal-modal-content').html()).toContain('hello')
-  })
-  // todo: more test case
-})
-
-describe('Support SSR', () => {
-  it('Install plugin', async () => {
-    const app = createSSRApp({
-      template: `
-        <VueUniversalModal />
-      `
-    })
-    app.use(VueUniversalModal)
-    const html = await renderToString(app)
-    expect(html).toBe('<div id="vue-universal-modal-teleport"></div>')
+    const { document: dom } = new JSDOM(document.body.innerHTML).window
+    const modalsList = Array.from(dom.querySelectorAll('#modals .vue-universal-modal'))
+    expect(modalsList.length).toBe(1)
+    expect(modalsList[0].textContent).toBe('hello')
   })
 
-  it('Install plugin with options', async () => {
-    const app = createSSRApp({
-      template: `
-        <MyModalTeleport />
-      `
+  it('Create SSR Context', async () => {
+    const ctx: SSRContext = {}
+    const app = createApp({
+      template: '<Modal>hello</Modal>'
     })
     app.use(VueUniversalModal, {
-      teleportComponent: 'MyModalTeleport',
-      teleportComponentId: 'my-modal-teleport',
-      modalComponent: 'MyModal'
+      teleportTarget: '#modals'
     })
-    const html = await renderToString(app)
-    expect(html).toBe('<div id="my-modal-teleport"></div>')
+    const html = await renderToString(app, ctx)
+    const { document: dom } = new JSDOM(ctx.teleports?.['#modals']).window
+    const modalsList = Array.from(dom.querySelectorAll('.vue-universal-modal'))
+    expect(html).toBe('<!--teleport start--><!--teleport end-->')
+    expect(ctx.__teleportBuffers?.['#modals'].length).toBe(1)
+    expect(modalsList.length).toBe(1)
+    expect(modalsList[0].textContent).toBe('hello')
   })
-  // todo: The modal component test case
-  // it('Install plugin', async () => {
-  //   const ctx: SSRContext = {}
-  //   const html = await renderToString(
-  //     createApp({
-  //       setup() {
-  //         const svg = ref()
-  //         const circle = ref()
-  
-  //         return {
-  //           svg,
-  //           circle
-  //         }
-  //       },
-  //       template: `
-  //         <svg ref="svg"></svg>
-  //         <teleport :to="svg" v-if="svg">
-  //           <circle ref="circle"></circle>
-  //         </teleport>
-  //       `
-  //     }),
-  //     ctx
-  //   )
-  //   console.log(html)
-  //   console.log(ctx)
-  // })
 })
