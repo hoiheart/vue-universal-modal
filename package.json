@@ -96,11 +96,15 @@
         {
           "releaseRules": [
             {
-              "type": "docs",
+              "type": "refactor",
               "release": "patch"
             },
             {
-              "type": "refactor",
+              "type": "perf",
+              "release": "patch"
+            },
+            {
+              "type": "docs",
               "release": "patch"
             },
             {
