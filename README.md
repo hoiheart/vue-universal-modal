@@ -7,16 +7,15 @@ Universal modal plugin for Vue3
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Features](#features)
 - [Install plugin](#install-plugin)
   * [Options](#options)
-- [Teleport component](#teleport-component)
 - [Usage modal](#usage-modal)
   * [props](#props)
     + [props.options](#propsoptions)
   * [slot arguments](#slot-arguments)
 - [Handle global CSS](#handle-global-css)
 - [Example](#example)
-- [Todo](#todo)
 
 
 ## Introduction
@@ -25,12 +24,12 @@ Universal modal plugin for Vue3
 It is very light and simple, but it provides essential features for modal use in applications.  
 (Such as Add & Remove, Visible & Hidden, Transition, Auto bind keyboard and mouse to close, Support SSR, A11Y...)
 
-## features
+## Features
 
 * [x] Set order modals
 * [x] A11Y
 * [X] Support SSR (Insert rendering source into SSR context, Mount from Client-side)
-* [X]] TDD (Need more test cases)
+* [X] TDD (Need more test cases)
 * [ ] Support IE11 (IE 11 support for Vue@3 is still pending)
 
 ## Install plugin
