@@ -25,51 +25,58 @@ Universal modal plugin for Vue3
 It is very light and simple, but it provides essential features for modal use in applications.  
 (Such as Add & Remove, Visible & Hidden, Transition, Auto bind keyboard and mouse to close, Support SSR, A11Y...)
 
+## features
+
+* [x] Set order modals
+* [x] A11Y
+* [X] Support SSR (Insert rendering source into SSR context, Mount from Client-side)
+* [X]] TDD (Need more test cases)
+* [ ] Support IE11 (IE 11 support for Vue@3 is still pending)
+
 ## Install plugin
 
 ```bash
 npm install vue-universal-modal
 ```
 
-And install this plugin in vue application
+Insert teleport element in your html
+
+```html
+...
+  <div id="app"></div>
+  <!-- teleport target -->
+  <div id="modals"></div>
+...
+```
+
+And install plugin in vue application
 
 ```ts
 import VueUniversalModal from 'vue-universal-modal'
 // import VueUniversalModal from 'vue-universal-modal/dist/index.es5' // If need to use es5 build
 import 'vue-universal-modal/dist/index.css'
 
-app.use(VueUniversalModal)
+app.use(VueUniversalModal, {
+  teleportTarget: '#modals'
+})
 ```
+
+> In v1.0.4 and below, the global teleport component is automatically generated and used as a ref.  
+However, it was changed to insert the teleport dom outside the application and set it because it could not support server-side rendering.
 
 ### Options
 
 ```ts
 app.use(VueUniversalModal, {
-  teleportComponent: 'MyModalTeleport',
-  teleportComponentId: 'my-modal-teleport',
+  teleportTarget: '#my-modals',
   modalComponent: 'MyModal',
 })
 ```
 
 | name | type | detault | description |
 |- | - | - | - |
-| teleportComponent | `string` | `'VueUniversalModal'` | Global teleport component name |
-| teleportComponentId | `string` | `'vue-universal-modal-teleport'` | Global teleport component id |
+| teleportTarget **(required)** | `string` | | <a href="https://v3.vuejs.org/api/built-in-components.html#teleport" target="_blank">Teleport target</a> |
 | modalComponent | `string` | `'Modal'` | Global modal component name |
-
-## Teleport component
-
-Insert the teleport component into the root component.
-
-```vue
-<template>
-  <Main />
-  <VueUniversalModal />
-  <!-- If the option changed teleport component the name
-  <MyModalTeleport />
-  -->
-</template>
-```
 
 ## Usage modal
 
@@ -199,13 +206,3 @@ You can change it directly to your own style by referring to the <a href="https:
 * <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">source</a>
 * <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">demo</a>
 * <a href="https://hoiheart.github.io/vue-universal-modal/example/runtime.html" target="_blank">runtime</a>
-
-## Todo
-
-* [x] Order states
-* [x] Semantic release
-* [x] Make demo
-* [x] A11Y
-* [ ] TDD (Need more test cases)
-* [ ] Support SSR (Test only until renderToString of the teleport component)
-* [ ] Support IE11 (IE 11 support for Vue@3 is still pending)

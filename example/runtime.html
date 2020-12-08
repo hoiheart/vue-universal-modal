@@ -18,13 +18,16 @@
 </head>
 <body>
   <div id="app"></div>
+  <div id="modals"></div>
   <script src="https://unpkg.com/vue@next"></script>
   <script src="https://unpkg.com/vue-universal-modal/dist/index.runtime.js"></script>
   <script>
     var app = Vue.createApp({
-      template: '<Modal><div class="modal"><h2>Hello</h2><p>Vue Universal Modal</p></div></Modal><VueUniversalModal />'
+      template: '<Modal><div class="modal"><h2>Hello</h2><p>Vue Universal Modal</p></div></Modal>'
     })
-    app.use(VueUniversalModal)
+    app.use(VueUniversalModal, {
+      teleportTarget: '#modals'
+    })
     app.mount('#app')
   </script>
 </body>
