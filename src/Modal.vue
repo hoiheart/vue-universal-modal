@@ -6,7 +6,7 @@
     <transition
       :name="CLASS_NAME"
       appear
-      @after-leave="setClose"
+      @after-leave="() => close()"
     >
       <div
         v-show="show"
@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, getCurrentInstance, ref, watch, computed, onMounted, onUnmounted } from 'vue'
+import { defineComponent, inject, getCurrentInstance, ref, watch, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { PLUGIN_NAME, CLASS_NAME } from './index'
 
 import type { Provide } from './index'
@@ -92,27 +92,28 @@ export default defineComponent({
   setup (props) {
     const { teleportTarget, visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME) as Provide
     const { uid } = getCurrentInstance() || {}
-    const modalRef = ref(null)
-    const show = ref(!props.disabled)
-    const latest = computed(() => Boolean(uid === visibleModals.value[visibleModals.value.length - 1]))
+    const modalRef = ref()
+    const show = ref()
+    const latest = computed(() => {
+      if (!uid || !visibleModals.value.length) return false
+      return uid === visibleModals.value[visibleModals.value.length - 1]
+    })
 
     watch(() => props.disabled, () => {
       show.value = !props.disabled
-    })
+    }, { immediate: true })
 
-    function setVisibleModals () {
+    watch(() => show.value, (value) => {
       if (!uid) return
 
-      if (show.value && visibleModals.value.indexOf(uid) < 0) {
+      if (value && visibleModals.value.indexOf(uid) < 0) {
         addVisibleModals(uid)
       }
 
-      if (!show.value && visibleModals.value.indexOf(uid) > -1) {
+      if (!value && visibleModals.value.indexOf(uid) > -1) {
         removeVisibleModals(uid)
       }
-    }
-    watch(() => show.value, setVisibleModals)
-    setVisibleModals()
+    }, { immediate: true })
 
     const mergeOptions = {
       transition: 300,
@@ -124,21 +125,34 @@ export default defineComponent({
     } as Options
     const transition = mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false
 
-    const emitClose = function () {
+    function emitClose () {
       show.value = false
     }
     function onClickDimmed () {
       if (mergeOptions.closeClickDimmed) {
-        show.value = false
+        emitClose()
       }
     }
     function closeKeyEvent (event: KeyboardEvent) {
       if (event.keyCode === mergeOptions.closeKeyCode && latest.value) {
-        show.value = false
+        emitClose()
       }
     }
-    function setClose () {
-      props.close()
+
+    // wai-aria
+    let activeElement: Element | null
+    function setLastActiveElement (event: Event) {
+      const isModalEvent = (event.target as Element).closest(`.${CLASS_NAME}`)
+
+      // skip when this not latest modal
+      if (!latest.value) return
+
+      // set activeElement when fired outside this modal
+      if (!isModalEvent || (isModalEvent !== modalRef.value)) {
+        // skip when modal status is closing
+        if (isModalEvent && !isModalEvent.classList.contains(`${CLASS_NAME}-show`)) return
+        activeElement = event.target as Element
+      }
     }
 
     onMounted(() => {
@@ -147,11 +161,10 @@ export default defineComponent({
       }
 
       // wai-aria
-      let activeElement: Element | null
-      function setAriaFocus (value: boolean) {
+      document.addEventListener('click', setLastActiveElement)
+      function setFocus (value: boolean) {
         if (value) {
-          activeElement = document.activeElement
-          if (activeElement && modalRef.value) {
+          if (modalRef.value) {
             (modalRef.value as unknown as HTMLElement).focus()
           }
         } else {
@@ -160,30 +173,31 @@ export default defineComponent({
           }
         }
       }
-      if (show.value) setAriaFocus(show.value)
-      watch(() => show, (show) => {
-        setAriaFocus(show.value)
-      })
+      watch(() => show.value, (value) => {
+        setFocus(value)
+      }, { immediate: show.value })
     })
 
     onUnmounted(() => {
       if (mergeOptions.closeKeyCode) {
         document.removeEventListener('keyup', closeKeyEvent)
       }
+
+      // wai-aria
+      document.removeEventListener('click', setLastActiveElement)
     })
 
     return {
       CLASS_NAME,
-      className: props.class,
       teleportTarget,
       modalRef,
       show,
       latest,
       emitClose,
-      setClose,
       onClickDimmed,
       mergeOptions,
-      transition
+      transition,
+      className: props.class
     }
   }
 })
