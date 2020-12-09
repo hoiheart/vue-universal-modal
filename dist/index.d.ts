@@ -1,12 +1,15 @@
 import type { App, Ref } from 'vue';
 interface PluginOptions {
+    teleportTarget: string;
     teleportComponent: string;
     teleportComponentId: string;
     modalComponent: string;
 }
 interface Provide {
-    teleportComponentId: string;
-    teleportRef: Ref;
+    teleportTarget: string;
+    visibleModals: Ref<number[]>;
+    addVisibleModals: (id: number) => void;
+    removeVisibleModals: (id: number) => void;
 }
 declare const PLUGIN_NAME = "VueUniversalModal";
 declare const CLASS_NAME = "vue-universal-modal";

@@ -16,13 +16,11 @@
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 51;
   background-color: rgba(0, 0, 0, 0.8);
   text-align: left;
 }
-.vue-universal-modal.vue-universal-modal-show:not(:last-child) {
-  z-index: 50;
-  background: none !important;
+.vue-universal-modal:not(.vue-universal-modal-latest) {
+  background: none;
 }
 .vue-universal-modal-content {
   display: -webkit-box;

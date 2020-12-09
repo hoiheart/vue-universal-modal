@@ -37,18 +37,15 @@ declare const _default: import("vue").DefineComponent<{
     };
 }, {
     CLASS_NAME: string;
-    teleportRef: import("vue").Ref<any>;
-    modal: import("vue").Ref<null>;
-    state: {
-        show: boolean;
-        closed: boolean;
-        className: string;
-    };
+    teleportTarget: string;
+    modalRef: import("vue").Ref<any>;
+    show: import("vue").Ref<any>;
+    latest: import("vue").ComputedRef<boolean>;
     emitClose: () => void;
-    setClose: () => void;
     onClickDimmed: () => void;
     mergeOptions: Options;
     transition: string | boolean;
+    className: string;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, Record<string, any>, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
     close: Function;
     options: Record<string, any>;
