@@ -14,8 +14,11 @@ npm-debug.log
 /__tests__
 /.github
 /demo
+/example
 /node_modules
 .*rc
-.*.config.js
-tsconfig.build.json
+.*rc.*
+*config
+*config.*
+*.config.*
 index.html

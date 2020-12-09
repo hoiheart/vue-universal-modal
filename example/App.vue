@@ -6,7 +6,6 @@
   <Example4 />
   <Example5 />
   <Example6 />
-  <VueUniversalModal />
 </template>
 
 <script lang="ts">

@@ -4,7 +4,6 @@ import VueUniversalModal from '../src'
 
 const app = createApp(App)
 app.use(VueUniversalModal, {
-  teleportComponent: 'VueUniversalModal',
-  modalComponent: 'Modal'
+  teleportTarget: '#modals'
 })
 app.mount('#app')

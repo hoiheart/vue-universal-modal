@@ -1,24 +1,27 @@
 <template>
   <teleport
-    v-if="teleportRef"
-    :to="teleportRef"
-    :disabled="state.closed"
+    :to="teleportTarget"
+    :disabled="disabled"
   >
     <transition
       :name="CLASS_NAME"
       appear
-      @after-leave="setClose"
+      @after-leave="() => close()"
     >
       <div
-        v-show="state.show"
+        v-show="show"
         :id="id"
-        ref="modal"
+        ref="modalRef"
         :class="[
           CLASS_NAME,
-          { [`${CLASS_NAME}-show`]: state.show},
-          state.className
+          className,
+          { [`${CLASS_NAME}-show`]: show },
+          { [`${CLASS_NAME}-latest`]: latest },
         ]"
-        :style="{ transition, ...mergeOptions.styleModal }"
+        :style="{
+          transitionDuration: transition,
+          ...mergeOptions.styleModal
+        }"
         role="dialog"
         aria-modal="true"
         :aria-label="!ariaLabelledby && 'Modal window'"
@@ -27,7 +30,10 @@
       >
         <div
           :class="`${CLASS_NAME}-content`"
-          :style="{ transition, ...mergeOptions.styleModalContent }"
+          :style="{
+            transitionDuration: transition,
+            ...mergeOptions.styleModalContent
+          }"
           @click.self="onClickDimmed"
         >
           <slot :emitClose="emitClose" />
@@ -38,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, reactive, ref, onMounted, onUnmounted, watch } from 'vue'
+import { defineComponent, inject, getCurrentInstance, ref, watch, computed, onMounted, onUnmounted } from 'vue'
 import { PLUGIN_NAME, CLASS_NAME } from './index'
 
 import type { Provide } from './index'
@@ -84,20 +90,30 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const { teleportRef } = inject(PLUGIN_NAME) as Provide
-
-    const modal = ref(null)
-
-    const state = reactive({
-      show: !props.disabled,
-      closed: props.disabled,
-      className: props.class
+    const { teleportTarget, visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME) as Provide
+    const { uid } = getCurrentInstance() || {}
+    const modalRef = ref()
+    const show = ref()
+    const latest = computed(() => {
+      if (!uid || !visibleModals.value.length) return false
+      return uid === visibleModals.value[visibleModals.value.length - 1]
     })
 
     watch(() => props.disabled, () => {
-      state.show = !props.disabled
-      state.closed = props.disabled
-    })
+      show.value = !props.disabled
+    }, { immediate: true })
+
+    watch(() => show.value, (value) => {
+      if (!uid) return
+
+      if (value && visibleModals.value.indexOf(uid) < 0) {
+        addVisibleModals(uid)
+      }
+
+      if (!value && visibleModals.value.indexOf(uid) > -1) {
+        removeVisibleModals(uid)
+      }
+    }, { immediate: true })
 
     const mergeOptions = {
       transition: 300,
@@ -107,45 +123,49 @@ export default defineComponent({
       styleModalContent: {},
       ...props.options
     } as Options
-
-    const { closeClickDimmed, closeKeyCode } = mergeOptions
     const transition = mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false
 
     function emitClose () {
-      state.show = false
+      show.value = false
     }
-
     function onClickDimmed () {
-      if (closeClickDimmed) {
-        state.show = false
+      if (mergeOptions.closeClickDimmed) {
+        emitClose()
       }
     }
-
     function closeKeyEvent (event: KeyboardEvent) {
-      const isLastChild = teleportRef.value?.querySelector(`.${CLASS_NAME}:last-child`) === modal.value
-
-      if (event.keyCode === closeKeyCode && isLastChild) {
-        state.show = false
+      if (event.keyCode === mergeOptions.closeKeyCode && latest.value) {
+        emitClose()
       }
     }
 
-    function setClose () {
-      props.close()
-      state.closed = true
+    // wai-aria
+    let activeElement: Element | null
+    function setLastActiveElement (event: Event) {
+      const isModalEvent = (event.target as Element).closest(`.${CLASS_NAME}`)
+
+      // skip when this not latest modal
+      if (!latest.value) return
+
+      // set activeElement when fired outside this modal
+      if (!isModalEvent || (isModalEvent !== modalRef.value)) {
+        // skip when modal status is closing
+        if (isModalEvent && !isModalEvent.classList.contains(`${CLASS_NAME}-show`)) return
+        activeElement = event.target as Element
+      }
     }
 
     onMounted(() => {
-      if (closeKeyCode) {
+      if (mergeOptions.closeKeyCode) {
         document.addEventListener('keyup', closeKeyEvent)
       }
 
-      // set aria focus
-      let activeElement: Element | null
-      function setAriaFocus (value: boolean) {
+      // wai-aria
+      document.addEventListener('click', setLastActiveElement)
+      function setFocus (value: boolean) {
         if (value) {
-          activeElement = document.activeElement
-          if (activeElement && modal.value) {
-            (modal.value as unknown as HTMLElement).focus()
+          if (modalRef.value) {
+            (modalRef.value as unknown as HTMLElement).focus()
           }
         } else {
           if (activeElement) {
@@ -153,29 +173,31 @@ export default defineComponent({
           }
         }
       }
-
-      if (state.show) setAriaFocus(state.show)
-      watch(() => state.show, (value) => {
-        setAriaFocus(value)
-      })
+      watch(() => show.value, (value) => {
+        setFocus(value)
+      }, { immediate: show.value })
     })
 
     onUnmounted(() => {
-      if (closeKeyCode) {
+      if (mergeOptions.closeKeyCode) {
         document.removeEventListener('keyup', closeKeyEvent)
       }
+
+      // wai-aria
+      document.removeEventListener('click', setLastActiveElement)
     })
 
     return {
       CLASS_NAME,
-      teleportRef,
-      modal,
-      state,
+      teleportTarget,
+      modalRef,
+      show,
+      latest,
       emitClose,
-      setClose,
       onClickDimmed,
       mergeOptions,
-      transition
+      transition,
+      className: props.class
     }
   }
 })
@@ -203,13 +225,11 @@ export default defineComponent({
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 51;
   background-color: rgba(#000, 0.8);
   text-align: left;
 
-  &.vue-universal-modal-show:not(:last-child) {
-    z-index: 50;
-    background: none !important;
+  &:not(.vue-universal-modal-latest) {
+    background: none;
   }
 }
 
