@@ -202,6 +202,10 @@ You can change it directly to your own style by referring to the <a href="https:
 
 ## Example
 
-* <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">source</a>
-* <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">demo</a>
-* <a href="https://hoiheart.github.io/vue-universal-modal/example/runtime.html" target="_blank">runtime</a>
+> ⚠️ There is a problem where close transition is not executed in Vue 3.0.4 or below.  
+<a href="https://github.com/vuejs/vue-next/issues/2757" target="_blank">The bug report is being fixed and will work from the next version.</a>
+
+* <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">Source</a>
+* <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
+* <a href="https://hoiheart.github.io/vue-universal-modal/example/runtime.html" target="_blank">Runtime</a>
+* <a href="https://codesandbox.io/s/icy-voice-v477v?file=/src/index.js" target="_blank">Get SSR Context</a>

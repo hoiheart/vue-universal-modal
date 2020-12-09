@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, getCurrentInstance, ref, watch, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { defineComponent, inject, getCurrentInstance, ref, watch, computed, onMounted, onUnmounted } from 'vue'
 import { PLUGIN_NAME, CLASS_NAME } from './index'
 
 import type { Provide } from './index'
