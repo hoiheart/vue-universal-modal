@@ -29,7 +29,6 @@ It is very light and simple, but it provides essential features for modal use in
 * [x] Set order modals (modal on modal)
 * [x] A11Y
 * [X] Support SSR (Insert rendering source into SSR context, Mount from Client-side)
-* [X] TDD (Need more test cases)
 * [ ] Support IE11 (IE 11 support for Vue@3 is still pending)
 
 ## Install plugin
