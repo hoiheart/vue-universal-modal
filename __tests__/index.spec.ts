@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { JSDOM } from 'jsdom'
 import VueUniversalModal from '../src/index'
 
-import { createApp, nextTick } from 'vue'
+import { createApp, nextTick, ref } from 'vue'
 import { renderToString, SSRContext } from '@vue/server-renderer'
 
 const html = '<div id="modals"></div>'
@@ -45,6 +45,61 @@ describe('Unit test', () => {
     const modalsList = Array.from(dom.querySelectorAll('#modals .vue-universal-modal'))
     expect(modalsList.length).toBe(1)
     expect(modalsList[0].textContent).toBe('hello')
+  })
+
+  it('Set modal props', async () => {
+    document.body.innerHTML = html
+    const wrapper = mount({
+      setup () {
+        const close = ref(false)
+        const disabled = ref(true)
+        const options = {
+          transition: false,
+          closeClickDimmed: false,
+          closeKeyCode: false,
+          styleModal: { backgroundColor: 'rgba(255, 255, 0, 0.3)' },
+          styleModalContent: { justifyContent: 'flex-start' }
+        }
+        return {
+          close,
+          disabled,
+          options
+        }
+      },
+      template: `
+        <Modal
+          id="modal"
+          class="modal"
+          ariaLabelledby="title"
+          :close="() => close = true"
+          :disabled="disabled"
+          :options="options"
+          v-slot="{ emitClose }"
+        >
+          <h2 id="title">title</h2>
+          <span class="close-status">{{ close }}</span>
+          <button class="close" @click="() => close = true">close</button>
+        </Modal>
+      `
+    }, {
+      global: {
+        plugins: [
+          [VueUniversalModal, {
+            teleportTarget: '#modals'
+          }]
+        ]
+      }
+    })
+
+    // Test in disabled props for use VTU methods
+    const modal = wrapper.find('#modal.modal')
+    expect(modal).toBeTruthy()
+    expect(modal.attributes('aria-labelledby')).toBe('title')
+    expect((modal.element as HTMLElement).style.transitionDuration).toBe('false')
+    expect((modal.element as HTMLElement).style.backgroundColor).toBe('rgba(255, 255, 0, 0.3)')
+    expect((modal.find('.vue-universal-modal-content').element as HTMLElement).style.justifyContent).toBe('flex-start')
+    await wrapper.find('.close').trigger('click')
+    expect(modal.find('.close-status').text()).toBe('true')
   })
 
   it('Create SSR Context', async () => {

@@ -61,6 +61,7 @@
     "@vue/test-utils": "^2.0.0-beta.11",
     "autoprefixer": "^8.6.5",
     "babel-eslint": "^10.1.0",
+    "conventional-changelog-conventionalcommits": "^4.5.0",
     "core-js": "^3.8.0",
     "eslint": "^7.14.0",
     "eslint-plugin-import": "^2.20.2",
@@ -114,7 +115,24 @@
           ]
         }
       ],
-      "@semantic-release/release-notes-generator",
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "preset": "conventionalcommits",
+          "presetConfig": {
+            "types": [
+              {"type": "feat", "section": "Features"},
+              {"type": "fix", "section": "Bug Fixes"},
+              {"type": "chore", "hidden": true},
+              {"type": "docs", "hidden": false, "section": "Docs"},
+              {"type": "style", "hidden": false, "section": "Style"},
+              {"type": "refactor", "hidden": false, "section": "Refactor"},
+              {"type": "perf", "hidden": false, "section": "Perfomance"},
+              {"type": "test", "hidden": true}
+            ]
+          }
+        }
+      ],
       "@semantic-release/npm",
       [
         "@semantic-release/git",
