@@ -279,7 +279,7 @@ You can change it directly to your own style by referring to the <a href="https:
 
 ## Example
 
-> ⚠️ There is a problem where close transition is not executed in Vue 3.0.4 or below.  
+> ⚠️ There is a problem where close transition is not executed in Vue 3.0.X.  
 <a href="https://github.com/vuejs/vue-next/issues/2757" target="_blank">The bug report is being fixed and will work from the next version.</a>
 
 * <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">Source</a>
