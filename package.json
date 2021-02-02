@@ -2,6 +2,12 @@
   "name": "vue-universal-modal",
   "version": "0.0.0",
   "description": "Universal modal plugin for Vue@3",
+  "license": "ISC",
+  "author": {
+    "name": "hoiheart",
+    "email": "hoiheart@gmail.com",
+    "url": "https://github.com/hoiheart"
+  },
   "keywords": [
     "Vue",
     "VueJS",
@@ -11,7 +17,14 @@
     "VueJS modal",
     "Vue3 modal"
   ],
-  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hoiheart/vue-universal-modal.git"
+  },
+  "homepage": "https://github.com/hoiheart/vue-universal-modal#readme",
+  "bugs": {
+    "url": "https://github.com/hoiheart/vue-universal-modal/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "rimraf ./dist && rollup --config",
@@ -20,22 +33,9 @@
     "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hoiheart/vue-universal-modal.git"
-  },
-  "author": {
-    "name": "hoiheart",
-    "email": "hoiheart@gmail.com",
-    "url": "https://github.com/hoiheart"
-  },
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/hoiheart/vue-universal-modal/issues"
-  },
-  "homepage": "https://github.com/hoiheart/vue-universal-modal#readme",
+  "main": "dist/index.js",
   "peerDependencies": {
-    "vue": "^3.0.4"
+    "vue": "^3.0.5"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.12.1",
@@ -54,10 +54,10 @@
     "@vue/cli-plugin-typescript": "^4.5.9",
     "@vue/cli-plugin-unit-jest": "^4.5.9",
     "@vue/cli-service": "^4.5.9",
-    "@vue/compiler-sfc": "^3.0.4",
+    "@vue/compiler-sfc": "^3.0.5",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^7.0.0",
-    "@vue/server-renderer": "^3.0.4",
+    "@vue/server-renderer": "^3.0.5",
     "@vue/test-utils": "^2.0.0-beta.11",
     "autoprefixer": "^8.6.5",
     "babel-eslint": "^10.1.0",
@@ -82,13 +82,13 @@
     "vite": "^1.0.0-rc.13",
     "vue-jest": "^5.0.0-alpha.6"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
   "lint-staged": {
     "src/**/*.{vue,ts,tsx}": [
       "vue-cli-service lint"
     ]
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
   },
   "release": {
     "plugins": [
@@ -121,14 +121,42 @@
           "preset": "conventionalcommits",
           "presetConfig": {
             "types": [
-              {"type": "feat", "section": "Features"},
-              {"type": "fix", "section": "Bug Fixes"},
-              {"type": "chore", "hidden": true},
-              {"type": "docs", "hidden": false, "section": "Docs"},
-              {"type": "style", "hidden": false, "section": "Style"},
-              {"type": "refactor", "hidden": false, "section": "Refactor"},
-              {"type": "perf", "hidden": false, "section": "Perfomance"},
-              {"type": "test", "hidden": true}
+              {
+                "type": "feat",
+                "section": "Features"
+              },
+              {
+                "type": "fix",
+                "section": "Bug Fixes"
+              },
+              {
+                "type": "chore",
+                "hidden": true
+              },
+              {
+                "type": "docs",
+                "hidden": false,
+                "section": "Docs"
+              },
+              {
+                "type": "style",
+                "hidden": false,
+                "section": "Style"
+              },
+              {
+                "type": "refactor",
+                "hidden": false,
+                "section": "Refactor"
+              },
+              {
+                "type": "perf",
+                "hidden": false,
+                "section": "Perfomance"
+              },
+              {
+                "type": "test",
+                "hidden": true
+              }
             ]
           }
         }
