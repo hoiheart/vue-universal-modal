@@ -909,7 +909,8 @@ var script = defineComponent({
       default: ''
     }
   },
-  setup: function setup(props) {
+  emits: ['before-enter', 'after-enter', 'before-leave', 'after-leave'],
+  setup: function setup(props, context) {
     var _inject = inject(PLUGIN_NAME),
         teleportTarget = _inject.teleportTarget,
         visibleModals = _inject.visibleModals,
@@ -960,6 +961,11 @@ var script = defineComponent({
 
     function emitClose() {
       show.value = false;
+    }
+
+    function emitAfterLeave() {
+      context.emit('after-leave');
+      props.close();
     }
 
     function onClickDimmed() {
@@ -1032,6 +1038,7 @@ var script = defineComponent({
       show: show,
       latest: latest,
       emitClose: emitClose,
+      emitAfterLeave: emitAfterLeave,
       onClickDimmed: onClickDimmed,
       mergeOptions: mergeOptions,
       transition: transition,
@@ -1047,9 +1054,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [createVNode(Transition, {
     name: _ctx.CLASS_NAME,
     appear: "",
-    onAfterLeave: _cache[2] || (_cache[2] = function () {
-      return _ctx.close();
-    })
+    onBeforeEnter: _cache[2] || (_cache[2] = function ($event) {
+      return _ctx.$emit('before-enter');
+    }),
+    onAfterEnter: _cache[3] || (_cache[3] = function ($event) {
+      return _ctx.$emit('after-enter');
+    }),
+    onBeforeLeave: _cache[4] || (_cache[4] = function ($event) {
+      return _ctx.$emit('before-leave');
+    }),
+    onAfterLeave: _ctx.emitAfterLeave
   }, {
     default: withCtx(function () {
       return [withDirectives(createVNode("div", {
@@ -1085,7 +1099,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   }, 8
   /* PROPS */
-  , ["name"])], 8
+  , ["name", "onAfterLeave"])], 8
   /* PROPS */
   , ["to", "disabled"]);
 }

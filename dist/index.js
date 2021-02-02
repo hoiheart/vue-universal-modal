@@ -32,7 +32,13 @@ var script = defineComponent({
             default: ''
         }
     },
-    setup(props) {
+    emits: [
+        'before-enter',
+        'after-enter',
+        'before-leave',
+        'after-leave'
+    ],
+    setup(props, context) {
         const { teleportTarget, visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME);
         const { uid } = getCurrentInstance() || {};
         const modalRef = ref();
@@ -66,6 +72,10 @@ var script = defineComponent({
         const transition = mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false;
         function emitClose() {
             show.value = false;
+        }
+        function emitAfterLeave() {
+            context.emit('after-leave');
+            props.close();
         }
         function onClickDimmed() {
             if (mergeOptions.closeClickDimmed) {
@@ -128,6 +138,7 @@ var script = defineComponent({
             show,
             latest,
             emitClose,
+            emitAfterLeave,
             onClickDimmed,
             mergeOptions,
             transition,
@@ -144,7 +155,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     createVNode(Transition, {
       name: _ctx.CLASS_NAME,
       appear: "",
-      onAfterLeave: _cache[2] || (_cache[2] = () => _ctx.close())
+      onBeforeEnter: _cache[2] || (_cache[2] = $event => (_ctx.$emit('before-enter'))),
+      onAfterEnter: _cache[3] || (_cache[3] = $event => (_ctx.$emit('after-enter'))),
+      onBeforeLeave: _cache[4] || (_cache[4] = $event => (_ctx.$emit('before-leave'))),
+      onAfterLeave: _ctx.emitAfterLeave
     }, {
       default: withCtx(() => [
         withDirectives(createVNode("div", {
@@ -181,7 +195,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         ])
       ]),
       _: 3 /* FORWARDED */
-    }, 8 /* PROPS */, ["name"])
+    }, 8 /* PROPS */, ["name", "onAfterLeave"])
   ], 8 /* PROPS */, ["to", "disabled"]))
 }
 

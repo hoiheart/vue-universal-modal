@@ -913,7 +913,8 @@
 	      default: ''
 	    }
 	  },
-	  setup: function setup(props) {
+	  emits: ['before-enter', 'after-enter', 'before-leave', 'after-leave'],
+	  setup: function setup(props, context) {
 	    var _inject = vue.inject(PLUGIN_NAME),
 	        teleportTarget = _inject.teleportTarget,
 	        visibleModals = _inject.visibleModals,
@@ -964,6 +965,11 @@
 
 	    function emitClose() {
 	      show.value = false;
+	    }
+
+	    function emitAfterLeave() {
+	      context.emit('after-leave');
+	      props.close();
 	    }
 
 	    function onClickDimmed() {
@@ -1036,6 +1042,7 @@
 	      show: show,
 	      latest: latest,
 	      emitClose: emitClose,
+	      emitAfterLeave: emitAfterLeave,
 	      onClickDimmed: onClickDimmed,
 	      mergeOptions: mergeOptions,
 	      transition: transition,
@@ -1051,9 +1058,16 @@
 	  }, [vue.createVNode(vue.Transition, {
 	    name: _ctx.CLASS_NAME,
 	    appear: "",
-	    onAfterLeave: _cache[2] || (_cache[2] = function () {
-	      return _ctx.close();
-	    })
+	    onBeforeEnter: _cache[2] || (_cache[2] = function ($event) {
+	      return _ctx.$emit('before-enter');
+	    }),
+	    onAfterEnter: _cache[3] || (_cache[3] = function ($event) {
+	      return _ctx.$emit('after-enter');
+	    }),
+	    onBeforeLeave: _cache[4] || (_cache[4] = function ($event) {
+	      return _ctx.$emit('before-leave');
+	    }),
+	    onAfterLeave: _ctx.emitAfterLeave
 	  }, {
 	    default: vue.withCtx(function () {
 	      return [vue.withDirectives(vue.createVNode("div", {
@@ -1089,7 +1103,7 @@
 
 	  }, 8
 	  /* PROPS */
-	  , ["name"])], 8
+	  , ["name", "onAfterLeave"])], 8
 	  /* PROPS */
 	  , ["to", "disabled"]);
 	}

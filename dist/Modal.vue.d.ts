@@ -42,11 +42,12 @@ declare const _default: import("vue").DefineComponent<{
     show: import("vue").Ref<any>;
     latest: import("vue").ComputedRef<boolean>;
     emitClose: () => void;
+    emitAfterLeave: () => void;
     onClickDimmed: () => void;
     mergeOptions: Options;
     transition: string | boolean;
     className: string;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, Record<string, any>, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("before-enter" | "after-enter" | "before-leave" | "after-leave")[], "before-enter" | "after-enter" | "before-leave" | "after-leave", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
     close: Function;
     options: Record<string, any>;
     disabled: boolean;
