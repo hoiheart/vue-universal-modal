@@ -1,10 +1,23 @@
 <template>
-  <h2>4. modal in modal</h2>
-  <p>
-    <button @click="showModal('modal1')">
+  <h3 :class="style.h3">
+    4. modal in modal
+  </h3>
+  <div>
+    <button
+      :class="style.button"
+      @click="showModal('modal1')"
+    >
       Show modal1
     </button>
-  </p>
+    <a
+      href="https://github.com/hoiheart/vue-universal-modal/blob/master/example/4.modal.on.modal.vue"
+      target="_blank"
+      :class="style.button"
+      class="ml-2"
+    >
+      Source
+    </a>
+  </div>
   <Modal
     v-if="isShowModal.modal1"
     v-slot="{ emitClose }"
@@ -34,7 +47,10 @@
       <p>
         modal2
       </p>
-      <button @click="emitClose">
+      <button
+        :class="style.button"
+        @click="emitClose"
+      >
         close
       </button>
     </div>
@@ -43,6 +59,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
+import { style } from './style'
 
 export default defineComponent({
   setup () {
@@ -62,7 +79,8 @@ export default defineComponent({
     return {
       isShowModal,
       showModal,
-      closeModal
+      closeModal,
+      style
     }
   }
 })

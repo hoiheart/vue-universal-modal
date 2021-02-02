@@ -14,6 +14,7 @@ Universal modal plugin for Vue3
   * [props](#props)
     + [props.options](#propsoptions)
   * [slot arguments](#slot-arguments)
+  * [emit events](#emit-events)
 - [Handle global CSS](#handle-global-css)
 - [Example](#example)
 
@@ -184,6 +185,83 @@ export default defineComponent({
 </script>
 ```
 
+### emit events
+
+Supports emit properties for several transition events.  
+`before-enter`, `after-enter`, `before-leave`, `after-leave`
+
+```vue
+<template>
+  <p>
+    <button @click="showModal">
+      Show modal
+    </button>
+  </p>
+  <Modal
+    v-if="isShow"
+    v-slot="{ emitClose }"
+    :close="closeModal"
+    @before-enter="beforeEnter"
+    @after-enter="afterEnter"
+    @before-leave="beforeLeave"
+    @after-leave="afterLeave"
+  >
+    <div class="modal">
+      <p>
+        Hello
+      </p>
+      <button @click="emitClose">
+        close
+      </button>
+    </div>
+  </Modal>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const isShow = ref(false)
+
+    function showModal () {
+      isShow.value = true
+    }
+
+    function closeModal () {
+      isShow.value = false
+    }
+
+    function beforeEnter () {
+      console.log('before enter')
+    }
+
+    function afterEnter () {
+      console.log('after enter')
+    }
+
+    function beforeLeave () {
+      console.log('before leave')
+    }
+
+    function afterLeave () {
+      console.log('after leave')
+    }
+
+    return {
+      isShow,
+      showModal,
+      closeModal,
+      beforeEnter,
+      afterEnter,
+      beforeLeave,
+      afterLeave
+    }
+  }
+})
+</script>
+```
+
 ## Handle global CSS
 
 You can change it directly to your own style by referring to the <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">source</a>
@@ -201,7 +279,7 @@ You can change it directly to your own style by referring to the <a href="https:
 
 ## Example
 
-> ⚠️ There is a problem where close transition is not executed in Vue 3.0.4 or below.  
+> ⚠️ There is a problem where close transition is not executed in Vue 3.0.X.  
 <a href="https://github.com/vuejs/vue-next/issues/2757" target="_blank">The bug report is being fixed and will work from the next version.</a>
 
 * <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">Source</a>

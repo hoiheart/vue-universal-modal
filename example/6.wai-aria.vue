@@ -1,15 +1,28 @@
 <template>
-  <h2>6. wai-aria</h2>
-  <p>
-    <button @click="showModal('modal1')">
+  <h3 :class="style.h3">
+    6. wai-aria
+  </h3>
+  <div>
+    <button
+      :class="style.button"
+      @click="showModal('modal1')"
+    >
       Show modal1
     </button>
-  </p>
+    <a
+      href="https://github.com/hoiheart/vue-universal-modal/blob/master/example/6.wai-aria.vue"
+      target="_blank"
+      :class="style.button"
+      class="ml-2"
+    >
+      Source
+    </a>
+  </div>
   <Modal
     v-if="isShowModal.modal1"
     id="aria-modal1"
     v-slot="{ emitClose }"
-    class="aria-modal aria-modal1"
+    class="border-8 border-white-700 focus:border-blue-700"
     aria-labelledby="heading-modal1"
     :close="() => closeModal('modal1')"
   >
@@ -18,12 +31,16 @@
         wai-aria1
       </h2>
       <button
-        :style="{ marginRight: '10px' }"
+        :class="style.button"
+        class="mr-2"
         @click="showModal('modal2')"
       >
         open modal2
       </button>
-      <button @click="emitClose">
+      <button
+        :class="style.button"
+        @click="emitClose"
+      >
         close
       </button>
     </div>
@@ -32,7 +49,7 @@
     v-if="isShowModal.modal2"
     id="aria-modal2"
     v-slot="{ emitClose }"
-    class="aria-modal aria-modal2"
+    class="border-8 border-white-700 focus:border-blue-700"
     aria-labelledby="heading-modal2"
     :close="() => closeModal('modal2')"
   >
@@ -40,7 +57,10 @@
       <h2 id="heading-modal2">
         wai-aria2
       </h2>
-      <button @click="emitClose">
+      <button
+        :class="style.button"
+        @click="emitClose"
+      >
         close
       </button>
     </div>
@@ -49,6 +69,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
+import { style } from './style'
 
 export default defineComponent({
   setup () {
@@ -68,25 +89,9 @@ export default defineComponent({
     return {
       isShowModal,
       showModal,
-      closeModal
+      closeModal,
+      style
     }
   }
 })
 </script>
-
-<style lang="scss">
-#aria-modal1,
-#aria-modal2 {
-  &:focus {
-    border: 15px solid #fff;
-  }
-}
-</style>
-
-<style scoped lang="scss">
-button:focus,
-button:active {
-  background-color: #1890ff;
-  color: #fff;
-}
-</style>

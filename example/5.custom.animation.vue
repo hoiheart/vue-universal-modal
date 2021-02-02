@@ -1,10 +1,23 @@
 <template>
-  <h2>5. custom animation</h2>
-  <p>
-    <button @click="showModal">
+  <h3 :class="style.h3">
+    5. custom animation
+  </h3>
+  <div>
+    <button
+      :class="style.button"
+      @click="showModal"
+    >
       Show modal
     </button>
-  </p>
+    <a
+      href="https://github.com/hoiheart/vue-universal-modal/blob/master/example/5.custom.animation.vue"
+      target="_blank"
+      :class="style.button"
+      class="ml-2"
+    >
+      Source
+    </a>
+  </div>
   <Modal
     v-if="isShow"
     v-slot="{ emitClose }"
@@ -14,7 +27,10 @@
       <p>
         Hello
       </p>
-      <button @click="emitClose">
+      <button
+        :class="style.button"
+        @click="emitClose"
+      >
         close
       </button>
     </div>
@@ -23,6 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { style } from './style'
 
 export default defineComponent({
   setup () {
@@ -39,7 +56,8 @@ export default defineComponent({
     return {
       isShow,
       showModal,
-      closeModal
+      closeModal,
+      style
     }
   }
 })
