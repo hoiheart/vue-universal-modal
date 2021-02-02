@@ -6,7 +6,10 @@
     <transition
       :name="CLASS_NAME"
       appear
-      @after-leave="() => close()"
+      @before-enter="$emit('before-enter')"
+      @after-enter="$emit('after-enter')"
+      @before-leave="$emit('before-leave')"
+      @after-leave="emitAfterLeave"
     >
       <div
         v-show="show"
@@ -89,7 +92,13 @@ export default defineComponent({
       default: ''
     }
   },
-  setup (props) {
+  emits: [
+    'before-enter',
+    'after-enter',
+    'before-leave',
+    'after-leave'
+  ],
+  setup (props, context) {
     const { teleportTarget, visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME) as Provide
     const { uid } = getCurrentInstance() || {}
     const modalRef = ref()
@@ -127,6 +136,10 @@ export default defineComponent({
 
     function emitClose () {
       show.value = false
+    }
+    function emitAfterLeave () {
+      context.emit('after-leave')
+      props.close()
     }
     function onClickDimmed () {
       if (mergeOptions.closeClickDimmed) {
@@ -194,6 +207,7 @@ export default defineComponent({
       show,
       latest,
       emitClose,
+      emitAfterLeave,
       onClickDimmed,
       mergeOptions,
       transition,

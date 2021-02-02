@@ -1,11 +1,14 @@
 <template>
-  <h1>Vue Universal Modal Examples</h1>
+  <h2 class="text-2xl font-bold mt-8 mb-4">
+    Examples
+  </h2>
   <Example1 />
   <Example2 />
   <Example3 />
   <Example4 />
   <Example5 />
   <Example6 />
+  <Example7 />
 </template>
 
 <script lang="ts">
@@ -16,6 +19,7 @@ import Example3 from './3.options.vue'
 import Example4 from './4.modal.on.modal.vue'
 import Example5 from './5.custom.animation.vue'
 import Example6 from './6.wai-aria.vue'
+import Example7 from './7.event.vue'
 
 export default defineComponent({
   components: {
@@ -24,58 +28,13 @@ export default defineComponent({
     Example3,
     Example4,
     Example5,
-    Example6
+    Example6,
+    Example7
   }
 })
 </script>
 
 <style lang="scss">
-body {
-  margin: 0;
-  padding: 0;
-  -webkit-text-size-adjust: none;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
-  font-size: 16px;
-  color: #2c3e50;
-}
-
-#app {
-  padding: 30px;
-}
-
-h1 {
-  margin: 0 0 30px;
-  font-size: 26px;
-  font-weight: 500;
-}
-
-h2 {
-  margin: 20px 0 10px;
-  font-size: 20px;
-  font-weight: 500;
-}
-
-p {
-  margin: 10px 0;
-}
-
-button {
-  transition: 0.3s;
-  padding: 4px 15px;
-  font-size: 14px;
-  border-radius: 5px;
-  color: #1890ff;
-  background: #fff;
-  border: 1px solid #1890ff;
-  outline: none;
-  cursor: pointer;
-}
-button:focus,
-button:hover {
-  border-color: #03498b;
-  color: #03498b;
-}
-
 .modal {
   width: 300px;
   padding: 30px;

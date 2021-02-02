@@ -14,6 +14,7 @@ Universal modal plugin for Vue3
   * [props](#props)
     + [props.options](#propsoptions)
   * [slot arguments](#slot-arguments)
+  * [emit events](#emit-events)
 - [Handle global CSS](#handle-global-css)
 - [Example](#example)
 
@@ -178,6 +179,83 @@ export default defineComponent({
       isShow,
       showModal,
       closeModal
+    }
+  }
+})
+</script>
+```
+
+### emit events
+
+Supports emit properties for several transition events.  
+`before-enter`, `after-enter`, `before-leave`, `after-leave`
+
+```vue
+<template>
+  <p>
+    <button @click="showModal">
+      Show modal
+    </button>
+  </p>
+  <Modal
+    v-if="isShow"
+    v-slot="{ emitClose }"
+    :close="closeModal"
+    @before-enter="beforeEnter"
+    @after-enter="afterEnter"
+    @before-leave="beforeLeave"
+    @after-leave="afterLeave"
+  >
+    <div class="modal">
+      <p>
+        Hello
+      </p>
+      <button @click="emitClose">
+        close
+      </button>
+    </div>
+  </Modal>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+
+export default defineComponent({
+  setup () {
+    const isShow = ref(false)
+
+    function showModal () {
+      isShow.value = true
+    }
+
+    function closeModal () {
+      isShow.value = false
+    }
+
+    function beforeEnter () {
+      console.log('before enter')
+    }
+
+    function afterEnter () {
+      console.log('after enter')
+    }
+
+    function beforeLeave () {
+      console.log('before leave')
+    }
+
+    function afterLeave () {
+      console.log('after leave')
+    }
+
+    return {
+      isShow,
+      showModal,
+      closeModal,
+      beforeEnter,
+      afterEnter,
+      beforeLeave,
+      afterLeave
     }
   }
 })
