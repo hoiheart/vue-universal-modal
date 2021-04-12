@@ -34,9 +34,6 @@
     "lint": "vue-cli-service lint"
   },
   "main": "dist/index.js",
-  "peerDependencies": {
-    "vue": "^3.0.7"
-  },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.12.7",
@@ -47,18 +44,19 @@
     "@semantic-release/git": "^9.0.0",
     "@types/jest": "^24.0.19",
     "@types/jsdom": "^16.2.5",
-    "@typescript-eslint/eslint-plugin": "^4.9.0",
-    "@typescript-eslint/parser": "^4.9.0",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
+    "@vitejs/plugin-vue": "^1.2.1",
     "@vue/cli-plugin-babel": "^4.5.9",
     "@vue/cli-plugin-eslint": "^4.5.9",
     "@vue/cli-plugin-typescript": "^4.5.9",
     "@vue/cli-plugin-unit-jest": "^4.5.9",
     "@vue/cli-service": "^4.5.9",
-    "@vue/compiler-sfc": "^3.0.7",
+    "@vue/compiler-sfc": "^3.0.11",
     "@vue/eslint-config-standard": "^5.1.2",
     "@vue/eslint-config-typescript": "^7.0.0",
-    "@vue/server-renderer": "^3.0.7",
-    "@vue/test-utils": "^2.0.0-beta.11",
+    "@vue/server-renderer": "^3.0.11",
+    "@vue/test-utils": "^2.0.0-rc.4",
     "autoprefixer": "^8.6.5",
     "babel-eslint": "^10.1.0",
     "conventional-changelog-conventionalcommits": "^4.5.0",
@@ -78,9 +76,10 @@
     "rollup-plugin-vue": "^6.0.0",
     "sass": "^1.29.0",
     "sass-loader": "^8.0.2",
-    "typescript": "^4.1.2",
-    "vite": "^1.0.0-rc.13",
-    "vue-jest": "^5.0.0-alpha.6"
+    "typescript": "^4.2.4",
+    "vite": "^2.1.5",
+    "vue": "^3.0.11",
+    "vue-jest": "^5.0.0-alpha.8"
   },
   "lint-staged": {
     "src/**/*.{vue,ts,tsx}": [

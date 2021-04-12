@@ -64,7 +64,6 @@ export default defineComponent({
   props: {
     close: {
       type: Function,
-      required: true,
       default: () => {
         return undefined
       }
