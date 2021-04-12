@@ -1,6 +1,7 @@
 # vue-universal-modal
 
-Universal modal plugin for Vue3
+Universal modal plugin for Vue3  
+<a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
 
 > ⚠️ This plugin does not support Vue2
 
@@ -23,7 +24,8 @@ Universal modal plugin for Vue3
 
 `vue-universal-modal` plugin is based on the <a href="https://v3.vuejs.org/guide/teleport.html#teleport" target="_blank">teleport</a>.  
 It is very light and simple, but it provides essential features for modal use in applications.  
-(Such as Add & Remove, Visible & Hidden, Transition, Auto bind keyboard and mouse to close, Support SSR, A11Y...)
+(Such as Add & Remove, Visible & Hidden, Transition, Auto bind keyboard and mouse to close, Support SSR, A11Y...)  
+Here is the <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
 
 ## Features
 
@@ -278,9 +280,6 @@ You can change it directly to your own style by referring to the <a href="https:
 ```
 
 ## Example
-
-> ⚠️ There is a problem with close transition below Vue 3.0.6.  
-<a href="https://github.com/vuejs/vue-next/issues/2757" target="_blank">The bug is fixed and works from 3.0.7.</a>
 
 * <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">Source</a>
 * <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
