@@ -44,11 +44,16 @@ export const useOrder: UseOrder = ({ modelValue, show }) => {
 }
 
 type UseColse = ({ close, options, latest }: {
-  close: Ref<FunctionConstructor>;
+  close: Ref;
   options: Ref<{ [key: string]: unknown }>;
   latest: ComputedRef<boolean>
 }) => {
-  mergeOptions: { [key: string]: unknown };
+  mergeOptions: {
+    transition: number | false,
+    closeClickDimmed: boolean,
+    closeKeyCode: number | false,
+    styleModalContent: { [key: string]: unknown }
+  };
   onClickDimmed: () => void
 }
 export const useClose: UseColse = ({ close, options, latest }) => {
