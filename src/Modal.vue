@@ -1,45 +1,39 @@
 <template>
   <teleport
+    v-if="inserted"
     :to="teleportTarget"
     :disabled="disabled"
   >
     <transition
-      :name="CLASS_NAME"
       appear
-      @before-enter="$emit('before-enter')"
-      @after-enter="$emit('after-enter')"
-      @before-leave="$emit('before-leave')"
-      @after-leave="emitAfterLeave"
+      :name="CLASS_NAME"
+      v-on="onTransitionEmit"
     >
       <div
         v-show="show"
-        :id="id"
         ref="modalRef"
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-label="Modal window"
         :class="[
           CLASS_NAME,
-          className,
           { [`${CLASS_NAME}-show`]: show },
           { [`${CLASS_NAME}-latest`]: latest },
         ]"
-        :style="{
-          transitionDuration: transition,
-          ...mergeOptions.styleModal
-        }"
-        role="dialog"
-        aria-modal="true"
-        :aria-label="!ariaLabelledby && 'Modal window'"
-        :aria-labelledby="ariaLabelledby"
-        tabindex="-1"
+        :style="{ transitionDuration: transition }"
+        v-bind="$attrs"
       >
         <div
           :class="`${CLASS_NAME}-content`"
           :style="{
             transitionDuration: transition,
-            ...mergeOptions.styleModalContent
+            ...mergeOptions?.styleModalContent
           }"
           @click.self="onClickDimmed"
         >
           <slot :emitClose="emitClose" />
+          <slot name="close" />
         </div>
       </div>
     </transition>
@@ -47,171 +41,107 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, getCurrentInstance, ref, watch, computed, onMounted, onUnmounted } from 'vue'
+import { defineComponent, inject, ref, toRefs, watch } from 'vue'
 import { PLUGIN_NAME, CLASS_NAME } from './index'
+import { useA11Y, useClose, useOrder } from './hooks'
 
 import type { Provide } from './index'
 
-interface Options {
-  transition: number | false;
-  closeKeyCode: number | false;
-  closeClickDimmed: boolean;
-  styleModal: {[key: string]: string};
-  styleModalContent: {[key: string]: string};
-}
-
 export default defineComponent({
+  inheritAttrs: false,
   props: {
     close: {
       type: Function,
-      required: true,
       default: () => {
         return undefined
-      }
-    },
-    options: {
-      type: Object,
-      default: () => {
-        return {}
       }
     },
     disabled: {
       type: Boolean,
       default: false
     },
-    id: {
-      type: String,
-      default: ''
+    modelValue: {
+      type: Boolean,
+      default: true
     },
-    class: {
-      type: String,
-      default: ''
-    },
-    ariaLabelledby: {
-      type: String,
-      default: ''
+    options: {
+      type: Object,
+      default: () => {
+        return {}
+      }
     }
   },
   emits: [
     'before-enter',
+    'enter',
     'after-enter',
+    'enter-cancelled',
     'before-leave',
-    'after-leave'
+    'leave',
+    'after-leave',
+    'leave-cancelled'
   ],
   setup (props, context) {
-    const { teleportTarget, visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME) as Provide
-    const { uid } = getCurrentInstance() || {}
-    const modalRef = ref()
-    const show = ref()
-    const latest = computed(() => {
-      if (!uid || !visibleModals.value.length) return false
-      return uid === visibleModals.value[visibleModals.value.length - 1]
-    })
+    const { teleportTarget } = inject(PLUGIN_NAME) as Provide
+    const { close, disabled, options, modelValue } = toRefs(props)
 
-    watch(() => props.disabled, () => {
-      show.value = !props.disabled
-    }, { immediate: true })
+    const inserted = ref(modelValue.value === undefined ? true : modelValue.value)
+    const modalRef = ref(null)
+    const show = ref(!disabled.value)
 
-    watch(() => show.value, (value) => {
-      if (!uid) return
+    watch([
+      () => modelValue.value,
+      () => disabled.value
+    ], () => {
+      const isShow = modelValue.value && !disabled.value
 
-      if (value && visibleModals.value.indexOf(uid) < 0) {
-        addVisibleModals(uid)
-      }
+      show.value = isShow
 
-      if (!value && visibleModals.value.indexOf(uid) > -1) {
-        removeVisibleModals(uid)
+      if (modelValue.value) {
+        inserted.value = modelValue.value
       }
     }, { immediate: true })
 
-    const mergeOptions = {
-      transition: 300,
-      closeClickDimmed: true,
-      closeKeyCode: 27,
-      styleModal: {},
-      styleModalContent: {},
-      ...props.options
-    } as Options
-    const transition = mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false
+    const { latest } = useOrder({ modelValue, show })
+    const { mergeOptions, onClickDimmed } = useClose({ close, latest, options })
+    useA11Y({ latest, modalRef, show })
 
-    function emitClose () {
-      show.value = false
-    }
-    function emitAfterLeave () {
-      context.emit('after-leave')
-      props.close()
-    }
-    function onClickDimmed () {
-      if (mergeOptions.closeClickDimmed) {
-        emitClose()
-      }
-    }
-    function closeKeyEvent (event: KeyboardEvent) {
-      if (event.keyCode === mergeOptions.closeKeyCode && latest.value) {
-        emitClose()
-      }
-    }
-
-    // wai-aria
-    let activeElement: Element | null
-    function setLastActiveElement (event: Event) {
-      const isModalEvent = (event.target as Element).closest(`.${CLASS_NAME}`)
-
-      // skip when this not latest modal
-      if (!latest.value) return
-
-      // set activeElement when fired outside this modal
-      if (!isModalEvent || (isModalEvent !== modalRef.value)) {
-        // skip when modal status is closing
-        if (isModalEvent && !isModalEvent.classList.contains(`${CLASS_NAME}-show`)) return
-        activeElement = event.target as Element
-      }
-    }
-
-    onMounted(() => {
-      if (mergeOptions.closeKeyCode) {
-        document.addEventListener('keyup', closeKeyEvent)
-      }
-
-      // wai-aria
-      document.addEventListener('click', setLastActiveElement)
-      function setFocus (value: boolean) {
-        if (value) {
-          if (modalRef.value) {
-            (modalRef.value as unknown as HTMLElement).focus()
-          }
-        } else {
-          if (activeElement) {
-            (activeElement as HTMLElement).focus()
-          }
+    const onTransitionEmit = {
+      beforeEnter: () => context.emit('before-enter'),
+      enter: () => context.emit('enter'),
+      afterEnter: () => context.emit('after-enter'),
+      enterCancelled: () => context.emit('enter-cancelled'),
+      beforeLeave: () => context.emit('before-leave'),
+      leave: () => context.emit('leave'),
+      afterLeave: () => {
+        context.emit('after-leave')
+        if (modelValue.value === false) {
+          inserted.value = false
         }
-      }
-      watch(() => show.value, (value) => {
-        setFocus(value)
-      }, { immediate: show.value })
-    })
+      },
+      leaveCancelled: () => context.emit('leave-cancelled')
+    }
 
-    onUnmounted(() => {
-      if (mergeOptions.closeKeyCode) {
-        document.removeEventListener('keyup', closeKeyEvent)
-      }
-
-      // wai-aria
-      document.removeEventListener('click', setLastActiveElement)
-    })
+    /**
+     * @deprecated
+     */
+    const emitClose = () => {
+      console.warn('emitClose was deprecated.\nhttps://github.com/hoiheart/vue-universal-modal#usage-modal')
+      close.value()
+    }
 
     return {
       CLASS_NAME,
-      teleportTarget,
-      modalRef,
-      show,
-      latest,
       emitClose,
-      emitAfterLeave,
-      onClickDimmed,
+      inserted,
+      latest,
       mergeOptions,
-      transition,
-      className: props.class
+      modalRef,
+      onClickDimmed,
+      onTransitionEmit,
+      show,
+      teleportTarget,
+      transition: mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false
     }
   }
 })

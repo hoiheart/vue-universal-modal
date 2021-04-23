@@ -6,7 +6,6 @@
     <li>transition: false</li>
     <li>closeClickDimmed: false</li>
     <li>closeKeyCode: false</li>
-    <li>styleModal: { backgroundColor: 'rgba(59, 130, 246, 0.3)' }</li>
     <li>styleModalContent: { justifyContent: 'flex-start' }</li>
   </ul>
   <div>
@@ -26,10 +25,10 @@
     </a>
   </div>
   <Modal
-    v-if="isShowModal.modal1"
-    v-slot="{ emitClose }"
+    v-model="isShowModal.modal1"
     :close="() => closeModal('modal1')"
     :options="options"
+    :style="{ backgroundColor: 'rgba(59, 130, 246, 0.3)' }"
   >
     <div class="modal">
       <p>
@@ -44,15 +43,14 @@
       </button>
       <button
         :class="style.button"
-        @click="emitClose"
+        @click="() => closeModal('modal1')"
       >
         close
       </button>
     </div>
   </Modal>
   <Modal
-    v-if="isShowModal.modal2"
-    v-slot="{ emitClose }"
+    v-model="isShowModal.modal2"
     :close="() => closeModal('modal2')"
     :options="options"
   >
@@ -62,7 +60,7 @@
       </p>
       <button
         :class="style.button"
-        @click="emitClose"
+        @click="() => closeModal('modal2')"
       >
         close
       </button>
@@ -85,7 +83,6 @@ export default defineComponent({
       transition: false,
       closeClickDimmed: false,
       closeKeyCode: false,
-      styleModal: { backgroundColor: 'rgba(59, 130, 246, 0.3)' },
       styleModalContent: { justifyContent: 'flex-start' }
     }
 

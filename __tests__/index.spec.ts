@@ -57,7 +57,6 @@ describe('Unit test', () => {
           transition: false,
           closeClickDimmed: false,
           closeKeyCode: false,
-          styleModal: { backgroundColor: 'rgba(255, 255, 0, 0.3)' },
           styleModalContent: { justifyContent: 'flex-start' }
         }
         return {
@@ -70,11 +69,10 @@ describe('Unit test', () => {
         <Modal
           id="modal"
           class="modal"
-          ariaLabelledby="title"
+          aria-labelledby="title"
           :close="() => close = true"
           :disabled="disabled"
           :options="options"
-          v-slot="{ emitClose }"
         >
           <h2 id="title">title</h2>
           <span class="close-status">{{ close }}</span>
@@ -96,7 +94,6 @@ describe('Unit test', () => {
     expect(modal).toBeTruthy()
     expect(modal.attributes('aria-labelledby')).toBe('title')
     expect((modal.element as HTMLElement).style.transitionDuration).toBe('false')
-    expect((modal.element as HTMLElement).style.backgroundColor).toBe('rgba(255, 255, 0, 0.3)')
     expect((modal.find('.vue-universal-modal-content').element as HTMLElement).style.justifyContent).toBe('flex-start')
     await wrapper.find('.close').trigger('click')
     expect(modal.find('.close-status').text()).toBe('true')

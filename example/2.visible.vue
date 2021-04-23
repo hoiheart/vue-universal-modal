@@ -18,8 +18,9 @@
       Source
     </a>
   </div>
+  <!-- https://v3.vuejs.org/guide/migration/v-model.html#_3-x-syntax -->
   <Modal
-    v-slot="{ emitClose }"
+    :model-value="true"
     :close="closeModal"
     :disabled="!isShow"
   >
@@ -29,7 +30,7 @@
       </p>
       <button
         :class="style.button"
-        @click="emitClose"
+        @click="closeModal"
       >
         close
       </button>
