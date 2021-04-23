@@ -19,8 +19,7 @@
     </a>
   </div>
   <Modal
-    v-if="isShow"
-    v-slot="{ emitClose }"
+    v-model="isShow"
     :close="closeModal"
   >
     <div class="modal">
@@ -29,7 +28,7 @@
       </p>
       <button
         :class="style.button"
-        @click="emitClose"
+        @click="closeModal"
       >
         close
       </button>

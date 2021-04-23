@@ -1,9 +1,9 @@
 # vue-universal-modal
 
-Universal modal plugin for Vue3  
+Universal modal plugin for Vue@3  
 <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
 
-> ⚠️ This plugin does not support Vue2
+> ⚠️ This plugin does not support Vue@2
 
 ## Table of Contents
 
@@ -29,10 +29,10 @@ Here is the <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.h
 
 ## Features
 
-* [x] Set order modals (modal on modal)
-* [x] A11Y
-* [X] Support SSR (Insert rendering source into SSR context, Mount from Client-side)
-* [ ] Support IE11 (IE 11 support for Vue@3 is still pending)
+* Based on the teleport
+* Provides essential features for modal
+* A11Y
+* Support SSR (Insert rendering source into SSR context, Mount from Client-side)
 
 ## Install plugin
 
@@ -50,20 +50,19 @@ Insert teleport element in your html
 ...
 ```
 
+> Because SSR cannot be implemented by dynamically creating and ref referencing teleport elements, teleport targets must be inserted into html first.
+
 And install plugin in vue application
 
 ```ts
-import VueUniversalModal from 'vue-universal-modal'
-// import VueUniversalModal from 'vue-universal-modal/dist/index.es5' // If need to use es5 build
 import 'vue-universal-modal/dist/index.css'
+
+import VueUniversalModal from 'vue-universal-modal'
 
 app.use(VueUniversalModal, {
   teleportTarget: '#modals'
 })
 ```
-
-> In v1.0.4 and below, the global teleport component is automatically generated and used as a ref.  
-However, it was changed to insert the teleport dom outside the application and set it because it could not support server-side rendering.
 
 ### Options
 
@@ -85,77 +84,23 @@ Insert the component wrapped with the modal component. (Slot based)
 
 ```vue
 <template>
-  <Modal>
-  <!-- If the option changed modal component the name
-  <MyModal>
-  -->
-    <div class="modal">
-      <h2>Hello</h2>
-      <p>
-        Vue Universal Modal
-      </p>
-    </div>
-  </Modal>
-</template>
-
-<style scoped lang="scss">
-.modal {
-  width: 300px;
-  padding: 30px;
-  box-sizing: border-box;
-  background-color: #fff;
-  font-size: 20px;
-  text-align: center;
-}
-</style>
-```
-
-### props
-
-| name | type | detault | description |
-|- | - | - | - |
-| close | `function` | `() => {}` | Function to close a modal |
-| disabled | `boolean` | `false` | Handle visibility (as in v-show) |
-| options | `object` | `{}` |  |
-| id | `string` | `''` |  | modal id
-| class | `string` | `''` |  | modal class
-| ariaLabelledby | `string` | `''` | Applying modal heading id helps with accessibility. |
-
-#### props.options
-
-| name | type | detault | description |
-|- | - | - | - |
-| transition | `number` &#124; `false` | `300` | transition duration |
-| closeClickDimmed | `boolean` | `true` | Closes the modal when dimmed is clicked |
-| closeKeyCode | `number` &#124; `false` | `27` (esc) | Handle just visibility (as in v-show) |
-| styleModal | `object` | `{}` | Inject modal window style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">`.vue-universal-modal`</a>)|
-| styleModalContent | `object` | `{}` | Inject modal content style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">`.vue-universal-modal-content`</a>)|
-
-### slot arguments
-
-There are slot arguments that can be used within modal content.
-
-| name | type | description |
-|- | - | - |
-| emitClose | function | The modal component must be unmount after the transitionEnd event.<br>So we need to pass the close function to props and run emitClose with logic wrapped. |
-
-```vue
-<template>
   <p>
     <button @click="showModal">
       Show modal
     </button>
   </p>
+  <!-- If the option changed modal component the name
+  <MyModal>
+  -->
   <Modal
-    v-if="isShow"
-    v-slot="{ emitClose }"
+    v-model="isShow"
     :close="closeModal"
   >
     <div class="modal">
       <p>
         Hello
       </p>
-      <button @click="emitClose">
+      <button @click="closeModal">
         close
       </button>
     </div>
@@ -185,12 +130,43 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped lang="scss">
+.modal {
+  width: 300px;
+  padding: 30px;
+  box-sizing: border-box;
+  background-color: #fff;
+  font-size: 20px;
+  text-align: center;
+}
+</style>
 ```
+
+> ### v1.0.x -> v1.1.x change point
+> * Use `v-model` instead of v-if for modal component insertion
+> * `emitClose` slot argument was deprecated.
+
+### props
+
+| name | type | detault | description |
+|- | - | - | - |
+| close | `function` | `() => {}` | Function to close a modal (apply when click dimmed) |
+| disabled | `boolean` | `false` | Handle just visibility (as in v-show) |
+| options | `object` | `{}` |  |
+
+#### props.options
+
+| name | type | detault | description |
+|- | - | - | - |
+| transition | `number` &#124; `false` | `300` | transition duration |
+| closeClickDimmed | `boolean` | `true` | Closes the modal when dimmed is clicked |
+| closeKeyCode | `number` &#124; `false` | `27` (esc) | Closes the modal when press key |
+| styleModalContent | `object` | `{}` | Inject modal content style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">`.vue-universal-modal-content`</a>)|
 
 ### emit events
 
-Supports emit properties for several transition events.  
-`before-enter`, `after-enter`, `before-leave`, `after-leave`
+Supports emit properties for all <a href="https://v3.vuejs.org/guide/transitions-enterleave.html#javascript-hooks">transition events.</a>  
 
 ```vue
 <template>
@@ -200,8 +176,7 @@ Supports emit properties for several transition events.
     </button>
   </p>
   <Modal
-    v-if="isShow"
-    v-slot="{ emitClose }"
+    v-model="isShow"
     :close="closeModal"
     @before-enter="beforeEnter"
     @after-enter="afterEnter"
@@ -212,7 +187,7 @@ Supports emit properties for several transition events.
       <p>
         Hello
       </p>
-      <button @click="emitClose">
+      <button @click="closeModal">
         close
       </button>
     </div>

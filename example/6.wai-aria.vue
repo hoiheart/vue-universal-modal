@@ -19,9 +19,8 @@
     </a>
   </div>
   <Modal
-    v-if="isShowModal.modal1"
     id="aria-modal1"
-    v-slot="{ emitClose }"
+    v-model="isShowModal.modal1"
     class="border-8 border-white-700 focus:border-blue-700"
     aria-labelledby="heading-modal1"
     :close="() => closeModal('modal1')"
@@ -39,16 +38,15 @@
       </button>
       <button
         :class="style.button"
-        @click="emitClose"
+        @click="() => closeModal('modal1')"
       >
         close
       </button>
     </div>
   </Modal>
   <Modal
-    v-if="isShowModal.modal2"
     id="aria-modal2"
-    v-slot="{ emitClose }"
+    v-model="isShowModal.modal2"
     class="border-8 border-white-700 focus:border-blue-700"
     aria-labelledby="heading-modal2"
     :close="() => closeModal('modal2')"
@@ -59,7 +57,7 @@
       </h2>
       <button
         :class="style.button"
-        @click="emitClose"
+        @click="() => closeModal('modal2')"
       >
         close
       </button>

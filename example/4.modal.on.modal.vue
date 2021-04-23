@@ -19,8 +19,7 @@
     </a>
   </div>
   <Modal
-    v-if="isShowModal.modal1"
-    v-slot="{ emitClose }"
+    v-model="isShowModal.modal1"
     :close="() => closeModal('modal1')"
   >
     <div class="modal">
@@ -28,19 +27,22 @@
         modal1
       </p>
       <button
+        :class="style.button"
         :style="{ marginRight: '10px' }"
         @click="showModal('modal2')"
       >
         open modal2
       </button>
-      <button @click="emitClose">
+      <button
+        :class="style.button"
+        @click="() => closeModal('modal1')"
+      >
         close
       </button>
     </div>
   </Modal>
   <Modal
-    v-if="isShowModal.modal2"
-    v-slot="{ emitClose }"
+    v-model="isShowModal.modal2"
     :close="() => closeModal('modal2')"
   >
     <div class="modal">
@@ -49,7 +51,7 @@
       </p>
       <button
         :class="style.button"
-        @click="emitClose"
+        @click="() => closeModal('modal2')"
       >
         close
       </button>

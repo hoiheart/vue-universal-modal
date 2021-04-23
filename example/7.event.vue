@@ -1,6 +1,6 @@
 <template>
   <h3 :class="style.h3">
-    7. event
+    7. event (please see console)
   </h3>
   <div>
     <button
@@ -19,8 +19,7 @@
     </a>
   </div>
   <Modal
-    v-if="isShow"
-    v-slot="{ emitClose }"
+    v-model="isShow"
     :close="closeModal"
     @before-enter="beforeEnter"
     @after-enter="afterEnter"
@@ -33,7 +32,7 @@
       </p>
       <button
         :class="style.button"
-        @click="emitClose"
+        @click="closeModal"
       >
         close
       </button>
