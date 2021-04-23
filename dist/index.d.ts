@@ -1,9 +1,9 @@
 import type { App, Ref } from 'vue';
 interface PluginOptions {
-    teleportTarget: string;
-    teleportComponent: string;
-    teleportComponentId: string;
-    modalComponent: string;
+    teleportTarget?: string;
+    teleportComponent?: string;
+    teleportComponentId?: string;
+    modalComponent?: string;
 }
 interface Provide {
     teleportTarget: string;
@@ -14,7 +14,7 @@ interface Provide {
 declare const PLUGIN_NAME = "VueUniversalModal";
 declare const CLASS_NAME = "vue-universal-modal";
 declare const _default: {
-    install: (app: App, options?: {}) => void;
+    install: (app: App<any>, options: PluginOptions) => void;
 };
 export default _default;
 export { PLUGIN_NAME, CLASS_NAME };

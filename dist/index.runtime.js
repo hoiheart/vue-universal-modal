@@ -48,20 +48,20 @@
 	});
 
 	var nativePropertyIsEnumerable = {}.propertyIsEnumerable;
-	var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+	var getOwnPropertyDescriptor$1 = Object.getOwnPropertyDescriptor;
 
 	// Nashorn ~ JDK8 bug
-	var NASHORN_BUG = getOwnPropertyDescriptor && !nativePropertyIsEnumerable.call({ 1: 2 }, 1);
+	var NASHORN_BUG = getOwnPropertyDescriptor$1 && !nativePropertyIsEnumerable.call({ 1: 2 }, 1);
 
 	// `Object.prototype.propertyIsEnumerable` method implementation
 	// https://tc39.github.io/ecma262/#sec-object.prototype.propertyisenumerable
-	var f = NASHORN_BUG ? function propertyIsEnumerable(V) {
-	  var descriptor = getOwnPropertyDescriptor(this, V);
+	var f$4 = NASHORN_BUG ? function propertyIsEnumerable(V) {
+	  var descriptor = getOwnPropertyDescriptor$1(this, V);
 	  return !!descriptor && descriptor.enumerable;
 	} : nativePropertyIsEnumerable;
 
 	var objectPropertyIsEnumerable = {
-		f: f
+		f: f$4
 	};
 
 	var createPropertyDescriptor = function (bitmap, value) {
@@ -124,7 +124,7 @@
 
 	var hasOwnProperty = {}.hasOwnProperty;
 
-	var has = function (it, key) {
+	var has$1 = function (it, key) {
 	  return hasOwnProperty.call(it, key);
 	};
 
@@ -147,17 +147,17 @@
 
 	// `Object.getOwnPropertyDescriptor` method
 	// https://tc39.github.io/ecma262/#sec-object.getownpropertydescriptor
-	var f$1 = descriptors ? nativeGetOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
+	var f$3 = descriptors ? nativeGetOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
 	  O = toIndexedObject(O);
 	  P = toPrimitive(P, true);
 	  if (ie8DomDefine) try {
 	    return nativeGetOwnPropertyDescriptor(O, P);
 	  } catch (error) { /* empty */ }
-	  if (has(O, P)) return createPropertyDescriptor(!objectPropertyIsEnumerable.f.call(O, P), O[P]);
+	  if (has$1(O, P)) return createPropertyDescriptor(!objectPropertyIsEnumerable.f.call(O, P), O[P]);
 	};
 
 	var objectGetOwnPropertyDescriptor = {
-		f: f$1
+		f: f$3
 	};
 
 	var anObject = function (it) {
@@ -202,9 +202,9 @@
 	};
 
 	var SHARED = '__core-js_shared__';
-	var store = global_1[SHARED] || setGlobal(SHARED, {});
+	var store$1 = global_1[SHARED] || setGlobal(SHARED, {});
 
-	var sharedStore = store;
+	var sharedStore = store$1;
 
 	var functionToString = Function.toString;
 
@@ -217,16 +217,16 @@
 
 	var inspectSource = sharedStore.inspectSource;
 
-	var WeakMap = global_1.WeakMap;
+	var WeakMap$1 = global_1.WeakMap;
 
-	var nativeWeakMap = typeof WeakMap === 'function' && /native code/.test(inspectSource(WeakMap));
+	var nativeWeakMap = typeof WeakMap$1 === 'function' && /native code/.test(inspectSource(WeakMap$1));
 
 	var shared = createCommonjsModule(function (module) {
 	(module.exports = function (key, value) {
 	  return sharedStore[key] || (sharedStore[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: '3.8.0',
-	  mode:  'global',
+	  mode: 'global',
 	  copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -244,13 +244,13 @@
 	  return keys[key] || (keys[key] = uid(key));
 	};
 
-	var hiddenKeys = {};
+	var hiddenKeys$1 = {};
 
-	var WeakMap$1 = global_1.WeakMap;
-	var set, get, has$1;
+	var WeakMap = global_1.WeakMap;
+	var set, get, has;
 
 	var enforce = function (it) {
-	  return has$1(it) ? get(it) : set(it, {});
+	  return has(it) ? get(it) : set(it, {});
 	};
 
 	var getterFor = function (TYPE) {
@@ -263,41 +263,41 @@
 	};
 
 	if (nativeWeakMap) {
-	  var store$1 = sharedStore.state || (sharedStore.state = new WeakMap$1());
-	  var wmget = store$1.get;
-	  var wmhas = store$1.has;
-	  var wmset = store$1.set;
+	  var store = sharedStore.state || (sharedStore.state = new WeakMap());
+	  var wmget = store.get;
+	  var wmhas = store.has;
+	  var wmset = store.set;
 	  set = function (it, metadata) {
 	    metadata.facade = it;
-	    wmset.call(store$1, it, metadata);
+	    wmset.call(store, it, metadata);
 	    return metadata;
 	  };
 	  get = function (it) {
-	    return wmget.call(store$1, it) || {};
+	    return wmget.call(store, it) || {};
 	  };
-	  has$1 = function (it) {
-	    return wmhas.call(store$1, it);
+	  has = function (it) {
+	    return wmhas.call(store, it);
 	  };
 	} else {
 	  var STATE = sharedKey('state');
-	  hiddenKeys[STATE] = true;
+	  hiddenKeys$1[STATE] = true;
 	  set = function (it, metadata) {
 	    metadata.facade = it;
 	    createNonEnumerableProperty(it, STATE, metadata);
 	    return metadata;
 	  };
 	  get = function (it) {
-	    return has(it, STATE) ? it[STATE] : {};
+	    return has$1(it, STATE) ? it[STATE] : {};
 	  };
-	  has$1 = function (it) {
-	    return has(it, STATE);
+	  has = function (it) {
+	    return has$1(it, STATE);
 	  };
 	}
 
 	var internalState = {
 	  set: set,
 	  get: get,
-	  has: has$1,
+	  has: has,
 	  enforce: enforce,
 	  getterFor: getterFor
 	};
@@ -313,7 +313,7 @@
 	  var noTargetGet = options ? !!options.noTargetGet : false;
 	  var state;
 	  if (typeof value == 'function') {
-	    if (typeof key == 'string' && !has(value, 'name')) {
+	    if (typeof key == 'string' && !has$1(value, 'name')) {
 	      createNonEnumerableProperty(value, 'name', key);
 	    }
 	    state = enforceInternalState(value);
@@ -358,15 +358,15 @@
 	  return isNaN(argument = +argument) ? 0 : (argument > 0 ? floor : ceil)(argument);
 	};
 
-	var min = Math.min;
+	var min$2 = Math.min;
 
 	// `ToLength` abstract operation
 	// https://tc39.github.io/ecma262/#sec-tolength
 	var toLength = function (argument) {
-	  return argument > 0 ? min(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
+	  return argument > 0 ? min$2(toInteger(argument), 0x1FFFFFFFFFFFFF) : 0; // 2 ** 53 - 1 == 9007199254740991
 	};
 
-	var max = Math.max;
+	var max$1 = Math.max;
 	var min$1 = Math.min;
 
 	// Helper for a popular repeating case of the spec:
@@ -374,7 +374,7 @@
 	// If integer < 0, let result be max((length + integer), 0); else let result be min(integer, length).
 	var toAbsoluteIndex = function (index, length) {
 	  var integer = toInteger(index);
-	  return integer < 0 ? max(integer + length, 0) : min$1(integer, length);
+	  return integer < 0 ? max$1(integer + length, 0) : min$1(integer, length);
 	};
 
 	// `Array.prototype.{ indexOf, includes }` methods implementation
@@ -414,9 +414,9 @@
 	  var i = 0;
 	  var result = [];
 	  var key;
-	  for (key in O) !has(hiddenKeys, key) && has(O, key) && result.push(key);
+	  for (key in O) !has$1(hiddenKeys$1, key) && has$1(O, key) && result.push(key);
 	  // Don't enum bug & hidden keys
-	  while (names.length > i) if (has(O, key = names[i++])) {
+	  while (names.length > i) if (has$1(O, key = names[i++])) {
 	    ~indexOf(result, key) || result.push(key);
 	  }
 	  return result;
@@ -433,38 +433,38 @@
 	  'valueOf'
 	];
 
-	var hiddenKeys$1 = enumBugKeys.concat('length', 'prototype');
+	var hiddenKeys = enumBugKeys.concat('length', 'prototype');
 
 	// `Object.getOwnPropertyNames` method
 	// https://tc39.github.io/ecma262/#sec-object.getownpropertynames
-	var f$3 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
-	  return objectKeysInternal(O, hiddenKeys$1);
+	var f$1 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
+	  return objectKeysInternal(O, hiddenKeys);
 	};
 
 	var objectGetOwnPropertyNames = {
-		f: f$3
+		f: f$1
 	};
 
-	var f$4 = Object.getOwnPropertySymbols;
+	var f = Object.getOwnPropertySymbols;
 
 	var objectGetOwnPropertySymbols = {
-		f: f$4
+		f: f
 	};
 
 	// all object keys, includes non-enumerable and symbols
-	var ownKeys = getBuiltIn('Reflect', 'ownKeys') || function ownKeys(it) {
+	var ownKeys$1 = getBuiltIn('Reflect', 'ownKeys') || function ownKeys(it) {
 	  var keys = objectGetOwnPropertyNames.f(anObject(it));
 	  var getOwnPropertySymbols = objectGetOwnPropertySymbols.f;
 	  return getOwnPropertySymbols ? keys.concat(getOwnPropertySymbols(it)) : keys;
 	};
 
 	var copyConstructorProperties = function (target, source) {
-	  var keys = ownKeys(source);
+	  var keys = ownKeys$1(source);
 	  var defineProperty = objectDefineProperty.f;
 	  var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 	  for (var i = 0; i < keys.length; i++) {
 	    var key = keys[i];
-	    if (!has(target, key)) defineProperty(target, key, getOwnPropertyDescriptor(source, key));
+	    if (!has$1(target, key)) defineProperty(target, key, getOwnPropertyDescriptor(source, key));
 	  }
 	};
 
@@ -488,7 +488,7 @@
 
 	var isForced_1 = isForced;
 
-	var getOwnPropertyDescriptor$1 = objectGetOwnPropertyDescriptor.f;
+	var getOwnPropertyDescriptor = objectGetOwnPropertyDescriptor.f;
 
 
 
@@ -524,7 +524,7 @@
 	  if (target) for (key in source) {
 	    sourceProperty = source[key];
 	    if (options.noTargetGet) {
-	      descriptor = getOwnPropertyDescriptor$1(target, key);
+	      descriptor = getOwnPropertyDescriptor(target, key);
 	      targetProperty = descriptor && descriptor.value;
 	    } else targetProperty = target[key];
 	    FORCED = isForced_1(GLOBAL ? key : TARGET + (STATIC ? '.' : '#') + key, options.forced);
@@ -577,13 +577,13 @@
 	var createWellKnownSymbol = useSymbolAsUid ? Symbol$1 : Symbol$1 && Symbol$1.withoutSetter || uid;
 
 	var wellKnownSymbol = function (name) {
-	  if (!has(WellKnownSymbolsStore, name)) {
-	    if (nativeSymbol && has(Symbol$1, name)) WellKnownSymbolsStore[name] = Symbol$1[name];
+	  if (!has$1(WellKnownSymbolsStore, name)) {
+	    if (nativeSymbol && has$1(Symbol$1, name)) WellKnownSymbolsStore[name] = Symbol$1[name];
 	    else WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
 	  } return WellKnownSymbolsStore[name];
 	};
 
-	var SPECIES = wellKnownSymbol('species');
+	var SPECIES$1 = wellKnownSymbol('species');
 
 	// `ArraySpeciesCreate` abstract operation
 	// https://tc39.github.io/ecma262/#sec-arrayspeciescreate
@@ -594,7 +594,7 @@
 	    // cross-realm fallback
 	    if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
 	    else if (isObject(C)) {
-	      C = C[SPECIES];
+	      C = C[SPECIES$1];
 	      if (C === null) C = undefined;
 	    }
 	  } return new (C === undefined ? Array : C)(length === 0 ? 0 : length);
@@ -620,7 +620,7 @@
 
 	var engineV8Version = version && +version;
 
-	var SPECIES$1 = wellKnownSymbol('species');
+	var SPECIES = wellKnownSymbol('species');
 
 	var arrayMethodHasSpeciesSupport = function (METHOD_NAME) {
 	  // We can't use this feature detection in V8 since it causes
@@ -629,7 +629,7 @@
 	  return engineV8Version >= 51 || !fails(function () {
 	    var array = [];
 	    var constructor = array.constructor = {};
-	    constructor[SPECIES$1] = function () {
+	    constructor[SPECIES] = function () {
 	      return { foo: 1 };
 	    };
 	    return array[METHOD_NAME](Boolean).foo !== 1;
@@ -637,7 +637,7 @@
 	};
 
 	var IS_CONCAT_SPREADABLE = wellKnownSymbol('isConcatSpreadable');
-	var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
+	var MAX_SAFE_INTEGER$1 = 0x1FFFFFFFFFFFFF;
 	var MAXIMUM_ALLOWED_INDEX_EXCEEDED = 'Maximum allowed index exceeded';
 
 	// We can't use this feature detection in V8 since it causes
@@ -672,10 +672,10 @@
 	      E = i === -1 ? O : arguments[i];
 	      if (isConcatSpreadable(E)) {
 	        len = toLength(E.length);
-	        if (n + len > MAX_SAFE_INTEGER) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
+	        if (n + len > MAX_SAFE_INTEGER$1) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
 	        for (k = 0; k < len; k++, n++) if (k in E) createProperty(A, n, E[k]);
 	      } else {
-	        if (n >= MAX_SAFE_INTEGER) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
+	        if (n >= MAX_SAFE_INTEGER$1) throw TypeError(MAXIMUM_ALLOWED_INDEX_EXCEEDED);
 	        createProperty(A, n++, E);
 	      }
 	    }
@@ -698,12 +698,12 @@
 	var thrower = function (it) { throw it; };
 
 	var arrayMethodUsesToLength = function (METHOD_NAME, options) {
-	  if (has(cache, METHOD_NAME)) return cache[METHOD_NAME];
+	  if (has$1(cache, METHOD_NAME)) return cache[METHOD_NAME];
 	  if (!options) options = {};
 	  var method = [][METHOD_NAME];
-	  var ACCESSORS = has(options, 'ACCESSORS') ? options.ACCESSORS : false;
-	  var argument0 = has(options, 0) ? options[0] : thrower;
-	  var argument1 = has(options, 1) ? options[1] : undefined;
+	  var ACCESSORS = has$1(options, 'ACCESSORS') ? options.ACCESSORS : false;
+	  var argument0 = has$1(options, 0) ? options[0] : thrower;
+	  var argument1 = has$1(options, 1) ? options[1] : undefined;
 
 	  return cache[METHOD_NAME] = !!method && !fails(function () {
 	    if (ACCESSORS && !descriptors) return true;
@@ -724,11 +724,11 @@
 
 	var NEGATIVE_ZERO = !!nativeIndexOf && 1 / [1].indexOf(1, -0) < 0;
 	var STRICT_METHOD = arrayMethodIsStrict('indexOf');
-	var USES_TO_LENGTH = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
+	var USES_TO_LENGTH$1 = arrayMethodUsesToLength('indexOf', { ACCESSORS: true, 1: 0 });
 
 	// `Array.prototype.indexOf` method
 	// https://tc39.github.io/ecma262/#sec-array.prototype.indexof
-	_export({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD || !USES_TO_LENGTH }, {
+	_export({ target: 'Array', proto: true, forced: NEGATIVE_ZERO || !STRICT_METHOD || !USES_TO_LENGTH$1 }, {
 	  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
 	    return NEGATIVE_ZERO
 	      // convert -0 to +0
@@ -738,17 +738,17 @@
 	});
 
 	var HAS_SPECIES_SUPPORT = arrayMethodHasSpeciesSupport('splice');
-	var USES_TO_LENGTH$1 = arrayMethodUsesToLength('splice', { ACCESSORS: true, 0: 0, 1: 2 });
+	var USES_TO_LENGTH = arrayMethodUsesToLength('splice', { ACCESSORS: true, 0: 0, 1: 2 });
 
-	var max$1 = Math.max;
-	var min$2 = Math.min;
-	var MAX_SAFE_INTEGER$1 = 0x1FFFFFFFFFFFFF;
+	var max = Math.max;
+	var min = Math.min;
+	var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF;
 	var MAXIMUM_ALLOWED_LENGTH_EXCEEDED = 'Maximum allowed length exceeded';
 
 	// `Array.prototype.splice` method
 	// https://tc39.github.io/ecma262/#sec-array.prototype.splice
 	// with adding support of @@species
-	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH$1 }, {
+	_export({ target: 'Array', proto: true, forced: !HAS_SPECIES_SUPPORT || !USES_TO_LENGTH }, {
 	  splice: function splice(start, deleteCount /* , ...items */) {
 	    var O = toObject(this);
 	    var len = toLength(O.length);
@@ -762,9 +762,9 @@
 	      actualDeleteCount = len - actualStart;
 	    } else {
 	      insertCount = argumentsLength - 2;
-	      actualDeleteCount = min$2(max$1(toInteger(deleteCount), 0), len - actualStart);
+	      actualDeleteCount = min(max(toInteger(deleteCount), 0), len - actualStart);
 	    }
-	    if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER$1) {
+	    if (len + insertCount - actualDeleteCount > MAX_SAFE_INTEGER) {
 	      throw TypeError(MAXIMUM_ALLOWED_LENGTH_EXCEEDED);
 	    }
 	    A = arraySpeciesCreate(O, actualDeleteCount);
@@ -847,7 +847,7 @@
 	  return obj;
 	}
 
-	function ownKeys$1(object, enumerableOnly) {
+	function ownKeys(object, enumerableOnly) {
 	  var keys = Object.keys(object);
 
 	  if (Object.getOwnPropertySymbols) {
@@ -866,13 +866,13 @@
 	    var source = arguments[i] != null ? arguments[i] : {};
 
 	    if (i % 2) {
-	      ownKeys$1(Object(source), true).forEach(function (key) {
+	      ownKeys(Object(source), true).forEach(function (key) {
 	        _defineProperty(target, key, source[key]);
 	      });
 	    } else if (Object.getOwnPropertyDescriptors) {
 	      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
 	    } else {
-	      ownKeys$1(Object(source)).forEach(function (key) {
+	      ownKeys(Object(source)).forEach(function (key) {
 	        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
 	      });
 	    }
@@ -881,231 +881,307 @@
 	  return target;
 	}
 
+	var useOrder = function useOrder(_ref) {
+	  var modelValue = _ref.modelValue,
+	      show = _ref.show;
+
+	  var _inject = vue.inject(PLUGIN_NAME),
+	      visibleModals = _inject.visibleModals,
+	      addVisibleModals = _inject.addVisibleModals,
+	      removeVisibleModals = _inject.removeVisibleModals;
+
+	  var _ref2 = vue.getCurrentInstance() || {},
+	      uid = _ref2.uid;
+
+	  var latest = vue.computed(function () {
+	    if (!uid || !visibleModals.value.length) return false;
+	    return uid === visibleModals.value[visibleModals.value.length - 1];
+	  });
+	  vue.watch([function () {
+	    return modelValue.value;
+	  }, function () {
+	    return show.value;
+	  }], function () {
+	    if (!uid) {
+	      return;
+	    }
+
+	    var isShow = modelValue.value && show.value;
+
+	    if (isShow && visibleModals.value.indexOf(uid) < 0) {
+	      addVisibleModals(uid);
+	    }
+
+	    if (!isShow && visibleModals.value.indexOf(uid) > -1) {
+	      removeVisibleModals(uid);
+	    }
+	  }, {
+	    immediate: true
+	  });
+	  return {
+	    latest: latest
+	  };
+	};
+	var useClose = function useClose(_ref3) {
+	  var close = _ref3.close,
+	      options = _ref3.options,
+	      latest = _ref3.latest;
+
+	  var mergeOptions = _objectSpread2({
+	    transition: 300,
+	    closeClickDimmed: true,
+	    closeKeyCode: 27,
+	    styleModalContent: {}
+	  }, options.value);
+
+	  function onClickDimmed() {
+	    if (mergeOptions.closeClickDimmed) {
+	      close.value();
+	    }
+	  }
+
+	  function closeKeyEvent(event) {
+	    if (event.keyCode === mergeOptions.closeKeyCode && latest.value) {
+	      close.value();
+	    }
+	  }
+
+	  vue.onMounted(function () {
+	    if (mergeOptions.closeKeyCode) {
+	      document.addEventListener('keyup', closeKeyEvent);
+	    }
+	  });
+	  vue.onUnmounted(function () {
+	    if (mergeOptions.closeKeyCode) {
+	      document.removeEventListener('keyup', closeKeyEvent);
+	    }
+	  });
+	  return {
+	    mergeOptions: mergeOptions,
+	    onClickDimmed: onClickDimmed
+	  };
+	};
+	var useA11Y = function useA11Y(_ref4) {
+	  var modalRef = _ref4.modalRef,
+	      latest = _ref4.latest,
+	      show = _ref4.show;
+	  var activeElement;
+
+	  function setLastActiveElement(event) {
+	    var isModalEvent = event.target.closest(".".concat(CLASS_NAME)); // skip when this not latest modal
+
+	    if (!latest.value) return; // set activeElement when fired outside this modal
+
+	    if (!isModalEvent || isModalEvent !== modalRef.value) {
+	      // skip when modal status is closing
+	      if (isModalEvent && !isModalEvent.classList.contains("".concat(CLASS_NAME, "-show"))) return;
+	      activeElement = event.target;
+	    }
+	  }
+
+	  vue.onMounted(function () {
+	    document.addEventListener('click', setLastActiveElement);
+
+	    function setFocus(value) {
+	      if (value) {
+	        if (modalRef.value) {
+	          modalRef.value.focus();
+	        }
+	      } else {
+	        if (activeElement) {
+	          activeElement.focus();
+	        }
+	      }
+	    }
+
+	    vue.watch(function () {
+	      return show.value;
+	    }, function (value) {
+	      vue.nextTick(function () {
+	        return setFocus(value);
+	      });
+	    }, {
+	      immediate: show.value
+	    });
+	  });
+	  vue.onUnmounted(function () {
+	    document.removeEventListener('click', setLastActiveElement);
+	  });
+	};
+
 	var script = vue.defineComponent({
+	  inheritAttrs: false,
 	  props: {
 	    close: {
 	      type: Function,
-	      required: true,
 	      default: function _default() {
 	        return undefined;
-	      }
-	    },
-	    options: {
-	      type: Object,
-	      default: function _default() {
-	        return {};
 	      }
 	    },
 	    disabled: {
 	      type: Boolean,
 	      default: false
 	    },
-	    id: {
-	      type: String,
-	      default: ''
+	    modelValue: {
+	      type: Boolean,
+	      default: true
 	    },
-	    class: {
-	      type: String,
-	      default: ''
-	    },
-	    ariaLabelledby: {
-	      type: String,
-	      default: ''
+	    options: {
+	      type: Object,
+	      default: function _default() {
+	        return {};
+	      }
 	    }
 	  },
-	  emits: ['before-enter', 'after-enter', 'before-leave', 'after-leave'],
+	  emits: ['before-enter', 'enter', 'after-enter', 'enter-cancelled', 'before-leave', 'leave', 'after-leave', 'leave-cancelled'],
 	  setup: function setup(props, context) {
 	    var _inject = vue.inject(PLUGIN_NAME),
-	        teleportTarget = _inject.teleportTarget,
-	        visibleModals = _inject.visibleModals,
-	        addVisibleModals = _inject.addVisibleModals,
-	        removeVisibleModals = _inject.removeVisibleModals;
+	        teleportTarget = _inject.teleportTarget;
 
-	    var _ref = vue.getCurrentInstance() || {},
-	        uid = _ref.uid;
+	    var _toRefs = vue.toRefs(props),
+	        close = _toRefs.close,
+	        disabled = _toRefs.disabled,
+	        options = _toRefs.options,
+	        modelValue = _toRefs.modelValue;
 
-	    var modalRef = vue.ref();
-	    var show = vue.ref();
-	    var latest = vue.computed(function () {
-	      if (!uid || !visibleModals.value.length) return false;
-	      return uid === visibleModals.value[visibleModals.value.length - 1];
-	    });
-	    vue.watch(function () {
-	      return props.disabled;
+	    var inserted = vue.ref(modelValue.value === undefined ? true : modelValue.value);
+	    var modalRef = vue.ref(null);
+	    var show = vue.ref(!disabled.value);
+	    vue.watch([function () {
+	      return modelValue.value;
 	    }, function () {
-	      show.value = !props.disabled;
-	    }, {
-	      immediate: true
-	    });
-	    vue.watch(function () {
-	      return show.value;
-	    }, function (value) {
-	      if (!uid) return;
+	      return disabled.value;
+	    }], function () {
+	      var isShow = modelValue.value && !disabled.value;
+	      show.value = isShow;
 
-	      if (value && visibleModals.value.indexOf(uid) < 0) {
-	        addVisibleModals(uid);
-	      }
-
-	      if (!value && visibleModals.value.indexOf(uid) > -1) {
-	        removeVisibleModals(uid);
+	      if (modelValue.value) {
+	        inserted.value = modelValue.value;
 	      }
 	    }, {
 	      immediate: true
 	    });
 
-	    var mergeOptions = _objectSpread2({
-	      transition: 300,
-	      closeClickDimmed: true,
-	      closeKeyCode: 27,
-	      styleModal: {},
-	      styleModalContent: {}
-	    }, props.options);
+	    var _useOrder = useOrder({
+	      modelValue: modelValue,
+	      show: show
+	    }),
+	        latest = _useOrder.latest;
 
-	    var transition = mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false;
+	    var _useClose = useClose({
+	      close: close,
+	      latest: latest,
+	      options: options
+	    }),
+	        mergeOptions = _useClose.mergeOptions,
+	        onClickDimmed = _useClose.onClickDimmed;
 
-	    function emitClose() {
-	      show.value = false;
-	    }
+	    useA11Y({
+	      latest: latest,
+	      modalRef: modalRef,
+	      show: show
+	    });
+	    var onTransitionEmit = {
+	      beforeEnter: function beforeEnter() {
+	        return context.emit('before-enter');
+	      },
+	      enter: function enter() {
+	        return context.emit('enter');
+	      },
+	      afterEnter: function afterEnter() {
+	        return context.emit('after-enter');
+	      },
+	      enterCancelled: function enterCancelled() {
+	        return context.emit('enter-cancelled');
+	      },
+	      beforeLeave: function beforeLeave() {
+	        return context.emit('before-leave');
+	      },
+	      leave: function leave() {
+	        return context.emit('leave');
+	      },
+	      afterLeave: function afterLeave() {
+	        context.emit('after-leave');
 
-	    function emitAfterLeave() {
-	      context.emit('after-leave');
-	      props.close();
-	    }
-
-	    function onClickDimmed() {
-	      if (mergeOptions.closeClickDimmed) {
-	        emitClose();
-	      }
-	    }
-
-	    function closeKeyEvent(event) {
-	      if (event.keyCode === mergeOptions.closeKeyCode && latest.value) {
-	        emitClose();
-	      }
-	    } // wai-aria
-
-
-	    var activeElement;
-
-	    function setLastActiveElement(event) {
-	      var isModalEvent = event.target.closest(".".concat(CLASS_NAME)); // skip when this not latest modal
-
-	      if (!latest.value) return; // set activeElement when fired outside this modal
-
-	      if (!isModalEvent || isModalEvent !== modalRef.value) {
-	        // skip when modal status is closing
-	        if (isModalEvent && !isModalEvent.classList.contains("".concat(CLASS_NAME, "-show"))) return;
-	        activeElement = event.target;
-	      }
-	    }
-
-	    vue.onMounted(function () {
-	      if (mergeOptions.closeKeyCode) {
-	        document.addEventListener('keyup', closeKeyEvent);
-	      } // wai-aria
-
-
-	      document.addEventListener('click', setLastActiveElement);
-
-	      function setFocus(value) {
-	        if (value) {
-	          if (modalRef.value) {
-	            modalRef.value.focus();
-	          }
-	        } else {
-	          if (activeElement) {
-	            activeElement.focus();
-	          }
+	        if (modelValue.value === false) {
+	          inserted.value = false;
 	        }
+	      },
+	      leaveCancelled: function leaveCancelled() {
+	        return context.emit('leave-cancelled');
 	      }
+	    };
+	    /**
+	     * @deprecated
+	     */
 
-	      vue.watch(function () {
-	        return show.value;
-	      }, function (value) {
-	        setFocus(value);
-	      }, {
-	        immediate: show.value
-	      });
-	    });
-	    vue.onUnmounted(function () {
-	      if (mergeOptions.closeKeyCode) {
-	        document.removeEventListener('keyup', closeKeyEvent);
-	      } // wai-aria
+	    var emitClose = function emitClose() {
+	      console.warn('emitClose was deprecated.\nhttps://github.com/hoiheart/vue-universal-modal#usage-modal');
+	      close.value();
+	    };
 
-
-	      document.removeEventListener('click', setLastActiveElement);
-	    });
 	    return {
 	      CLASS_NAME: CLASS_NAME,
-	      teleportTarget: teleportTarget,
-	      modalRef: modalRef,
-	      show: show,
-	      latest: latest,
 	      emitClose: emitClose,
-	      emitAfterLeave: emitAfterLeave,
-	      onClickDimmed: onClickDimmed,
+	      inserted: inserted,
+	      latest: latest,
 	      mergeOptions: mergeOptions,
-	      transition: transition,
-	      className: props.class
+	      modalRef: modalRef,
+	      onClickDimmed: onClickDimmed,
+	      onTransitionEmit: onTransitionEmit,
+	      show: show,
+	      teleportTarget: teleportTarget,
+	      transition: mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false
 	    };
 	  }
 	});
 
 	function render(_ctx, _cache, $props, $setup, $data, $options) {
-	  return vue.openBlock(), vue.createBlock(vue.Teleport, {
+	  return _ctx.inserted ? (vue.openBlock(), vue.createBlock(vue.Teleport, {
+	    key: 0,
 	    to: _ctx.teleportTarget,
 	    disabled: _ctx.disabled
-	  }, [vue.createVNode(vue.Transition, {
-	    name: _ctx.CLASS_NAME,
+	  }, [vue.createVNode(vue.Transition, vue.mergeProps({
 	    appear: "",
-	    onBeforeEnter: _cache[2] || (_cache[2] = function ($event) {
-	      return _ctx.$emit('before-enter');
-	    }),
-	    onAfterEnter: _cache[3] || (_cache[3] = function ($event) {
-	      return _ctx.$emit('after-enter');
-	    }),
-	    onBeforeLeave: _cache[4] || (_cache[4] = function ($event) {
-	      return _ctx.$emit('before-leave');
-	    }),
-	    onAfterLeave: _ctx.emitAfterLeave
-	  }, {
+	    name: _ctx.CLASS_NAME
+	  }, vue.toHandlers(_ctx.onTransitionEmit)), {
 	    default: vue.withCtx(function () {
-	      return [vue.withDirectives(vue.createVNode("div", {
-	        id: _ctx.id,
+	      var _ctx$mergeOptions;
+
+	      return [vue.withDirectives(vue.createVNode("div", vue.mergeProps({
 	        ref: "modalRef",
-	        class: [_ctx.CLASS_NAME, _ctx.className, _defineProperty({}, "".concat(_ctx.CLASS_NAME, "-show"), _ctx.show), _defineProperty({}, "".concat(_ctx.CLASS_NAME, "-latest"), _ctx.latest)],
-	        style: _objectSpread2({
-	          transitionDuration: _ctx.transition
-	        }, _ctx.mergeOptions.styleModal),
 	        role: "dialog",
+	        tabindex: "-1",
 	        "aria-modal": "true",
-	        "aria-label": !_ctx.ariaLabelledby && 'Modal window',
-	        "aria-labelledby": _ctx.ariaLabelledby,
-	        tabindex: "-1"
-	      }, [vue.createVNode("div", {
+	        "aria-label": "Modal window",
+	        class: [_ctx.CLASS_NAME, _defineProperty({}, "".concat(_ctx.CLASS_NAME, "-show"), _ctx.show), _defineProperty({}, "".concat(_ctx.CLASS_NAME, "-latest"), _ctx.latest)],
+	        style: {
+	          transitionDuration: _ctx.transition
+	        }
+	      }, _ctx.$attrs), [vue.createVNode("div", {
 	        class: "".concat(_ctx.CLASS_NAME, "-content"),
 	        style: _objectSpread2({
 	          transitionDuration: _ctx.transition
-	        }, _ctx.mergeOptions.styleModalContent),
+	        }, (_ctx$mergeOptions = _ctx.mergeOptions) === null || _ctx$mergeOptions === void 0 ? void 0 : _ctx$mergeOptions.styleModalContent),
 	        onClick: _cache[1] || (_cache[1] = vue.withModifiers(function () {
 	          return _ctx.onClickDimmed && _ctx.onClickDimmed.apply(_ctx, arguments);
 	        }, ["self"]))
 	      }, [vue.renderSlot(_ctx.$slots, "default", {
 	        emitClose: _ctx.emitClose
-	      })], 6
+	      }), vue.renderSlot(_ctx.$slots, "close")], 6
 	      /* CLASS, STYLE */
-	      )], 14
-	      /* CLASS, STYLE, PROPS */
-	      , ["id", "aria-label", "aria-labelledby"]), [[vue.vShow, _ctx.show]])];
+	      )], 16
+	      /* FULL_PROPS */
+	      ), [[vue.vShow, _ctx.show]])];
 	    }),
 	    _: 3
 	    /* FORWARDED */
 
-	  }, 8
+	  }, 16
+	  /* FULL_PROPS */
+	  , ["name"])], 8
 	  /* PROPS */
-	  , ["name", "onAfterLeave"])], 8
-	  /* PROPS */
-	  , ["to", "disabled"]);
+	  , ["to", "disabled"])) : vue.createCommentVNode("v-if", true);
 	}
 
 	script.render = render;
@@ -1113,47 +1189,50 @@
 
 	var PLUGIN_NAME = 'VueUniversalModal';
 	var CLASS_NAME = 'vue-universal-modal';
-	var VueUniversalModal = {
-	  install: function install(app) {
-	    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-	    var _options$teleportTarg = options.teleportTarget,
-	        teleportTarget = _options$teleportTarg === void 0 ? '' : _options$teleportTarg,
-	        _options$teleportComp = options.teleportComponent,
-	        teleportComponent = _options$teleportComp === void 0 ? '' : _options$teleportComp,
-	        _options$teleportComp2 = options.teleportComponentId,
-	        teleportComponentId = _options$teleportComp2 === void 0 ? '' : _options$teleportComp2,
-	        _options$modalCompone = options.modalComponent,
-	        modalComponent = _options$modalCompone === void 0 ? 'Modal' : _options$modalCompone;
 
-	    if (!teleportTarget) {
-	      return console.error('teleportTarget is required.');
-	    }
+	var install = function install(app) {
+	  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	  var _options$teleportTarg = options.teleportTarget,
+	      teleportTarget = _options$teleportTarg === void 0 ? '' : _options$teleportTarg,
+	      _options$teleportComp = options.teleportComponent,
+	      teleportComponent = _options$teleportComp === void 0 ? '' : _options$teleportComp,
+	      _options$teleportComp2 = options.teleportComponentId,
+	      teleportComponentId = _options$teleportComp2 === void 0 ? '' : _options$teleportComp2,
+	      _options$modalCompone = options.modalComponent,
+	      modalComponent = _options$modalCompone === void 0 ? 'Modal' : _options$modalCompone;
 
-	    if (teleportComponent || teleportComponentId) {
-	      return console.error('teleportComponent, teleportComponentId was deprecated. use teleportTarget instead. (https://github.com/hoiheart/vue-universal-modal)');
-	    }
-
-	    var visibleModals = vue.ref([]);
-
-	    var addVisibleModals = function addVisibleModals(id) {
-	      visibleModals.value = [].concat(_toConsumableArray(visibleModals.value), [id]);
-	    };
-
-	    var removeVisibleModals = function removeVisibleModals(id) {
-	      var modals = _toConsumableArray(visibleModals.value);
-
-	      modals.splice(visibleModals.value.indexOf(id), 1);
-	      visibleModals.value = _toConsumableArray(modals);
-	    };
-
-	    app.provide(PLUGIN_NAME, {
-	      teleportTarget: teleportTarget,
-	      visibleModals: vue.readonly(visibleModals),
-	      addVisibleModals: addVisibleModals,
-	      removeVisibleModals: removeVisibleModals
-	    });
-	    app.component(modalComponent, script);
+	  if (!teleportTarget) {
+	    return console.error('teleportTarget is required.');
 	  }
+
+	  if (teleportComponent || teleportComponentId) {
+	    return console.error('teleportComponent, teleportComponentId was deprecated. use teleportTarget instead. (https://github.com/hoiheart/vue-universal-modal)');
+	  }
+
+	  var visibleModals = vue.ref([]);
+
+	  var addVisibleModals = function addVisibleModals(id) {
+	    visibleModals.value = [].concat(_toConsumableArray(visibleModals.value), [id]);
+	  };
+
+	  var removeVisibleModals = function removeVisibleModals(id) {
+	    var modals = _toConsumableArray(visibleModals.value);
+
+	    modals.splice(visibleModals.value.indexOf(id), 1);
+	    visibleModals.value = _toConsumableArray(modals);
+	  };
+
+	  app.provide(PLUGIN_NAME, {
+	    teleportTarget: teleportTarget,
+	    visibleModals: vue.readonly(visibleModals),
+	    addVisibleModals: addVisibleModals,
+	    removeVisibleModals: removeVisibleModals
+	  });
+	  app.component(modalComponent, script);
+	};
+
+	var VueUniversalModal = {
+	  install: install
 	};
 
 	return VueUniversalModal;

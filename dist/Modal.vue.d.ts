@@ -1,65 +1,57 @@
-interface Options {
-    transition: number | false;
-    closeKeyCode: number | false;
-    closeClickDimmed: boolean;
-    styleModal: {
-        [key: string]: string;
-    };
-    styleModalContent: {
-        [key: string]: string;
-    };
-}
 declare const _default: import("vue").DefineComponent<{
     close: {
         type: FunctionConstructor;
-        required: true;
         default: () => undefined;
-    };
-    options: {
-        type: ObjectConstructor;
-        default: () => {};
     };
     disabled: {
         type: BooleanConstructor;
         default: boolean;
     };
-    id: {
-        type: StringConstructor;
-        default: string;
+    modelValue: {
+        type: BooleanConstructor;
+        default: boolean;
     };
-    class: {
-        type: StringConstructor;
-        default: string;
-    };
-    ariaLabelledby: {
-        type: StringConstructor;
-        default: string;
+    options: {
+        type: ObjectConstructor;
+        default: () => {};
     };
 }, {
     CLASS_NAME: string;
-    teleportTarget: string;
-    modalRef: import("vue").Ref<any>;
-    show: import("vue").Ref<any>;
-    latest: import("vue").ComputedRef<boolean>;
     emitClose: () => void;
-    emitAfterLeave: () => void;
+    inserted: import("vue").Ref<boolean>;
+    latest: import("vue").ComputedRef<boolean>;
+    mergeOptions: {
+        transition: number | false;
+        closeClickDimmed: boolean;
+        closeKeyCode: number | false;
+        styleModalContent: {
+            [key: string]: unknown;
+        };
+    };
+    modalRef: import("vue").Ref<null>;
     onClickDimmed: () => void;
-    mergeOptions: Options;
+    onTransitionEmit: {
+        beforeEnter: () => void;
+        enter: () => void;
+        afterEnter: () => void;
+        enterCancelled: () => void;
+        beforeLeave: () => void;
+        leave: () => void;
+        afterLeave: () => void;
+        leaveCancelled: () => void;
+    };
+    show: import("vue").Ref<boolean>;
+    teleportTarget: string;
     transition: string | boolean;
-    className: string;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("before-enter" | "after-enter" | "before-leave" | "after-leave")[], "before-enter" | "after-enter" | "before-leave" | "after-leave", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("before-enter" | "enter" | "after-enter" | "enter-cancelled" | "before-leave" | "leave" | "after-leave" | "leave-cancelled")[], "before-enter" | "enter" | "after-enter" | "enter-cancelled" | "before-leave" | "leave" | "after-leave" | "leave-cancelled", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
     close: Function;
-    options: Record<string, any>;
     disabled: boolean;
-    id: string;
-    class: string;
-    ariaLabelledby: string;
+    modelValue: boolean;
+    options: Record<string, any>;
 } & {}>, {
     close: Function;
-    options: Record<string, any>;
     disabled: boolean;
-    id: string;
-    class: string;
-    ariaLabelledby: string;
+    modelValue: boolean;
+    options: Record<string, any>;
 }>;
 export default _default;
