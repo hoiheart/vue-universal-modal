@@ -47,14 +47,19 @@ import { useA11Y, useClose, useOrder } from './hooks'
 
 import type { Provide } from './index'
 
+interface MergeOptions {
+  transition: number | false;
+  closeClickDimmed: boolean;
+  closeKeyCode: number | false;
+  styleModalContent: { [key: string]: unknown };
+}
+
 export default defineComponent({
   inheritAttrs: false,
   props: {
     close: {
       type: Function,
-      default: () => {
-        return undefined
-      }
+      default: () => undefined
     },
     disabled: {
       type: Boolean,
@@ -66,9 +71,7 @@ export default defineComponent({
     },
     options: {
       type: Object,
-      default: () => {
-        return {}
-      }
+      default: () => ({})
     }
   },
   emits: [
@@ -89,6 +92,14 @@ export default defineComponent({
     const modalRef = ref(null)
     const show = ref(!disabled.value)
 
+    const mergeOptions: MergeOptions = {
+      transition: 300,
+      closeClickDimmed: true,
+      closeKeyCode: 27,
+      styleModalContent: {},
+      ...options.value
+    }
+
     watch([
       () => modelValue.value,
       () => disabled.value
@@ -102,9 +113,14 @@ export default defineComponent({
       }
     }, { immediate: true })
 
-    const { latest } = useOrder({ modelValue, show })
-    const { mergeOptions, onClickDimmed } = useClose({ close, latest, options })
+    const { latest } = useOrder({ modalRef, show })
     useA11Y({ latest, modalRef, show })
+    const { onClickDimmed } = useClose({
+      close,
+      closeClickDimmed: mergeOptions.closeClickDimmed,
+      closeKeyCode: mergeOptions.closeKeyCode,
+      latest
+    })
 
     const onTransitionEmit = {
       beforeEnter: () => context.emit('before-enter'),
