@@ -11,9 +11,9 @@ interface PluginOptions {
 }
 interface Provide {
   teleportTarget: string,
-  visibleModals: Ref<number[]>;
-  addVisibleModals: (id: number) => void
-  removeVisibleModals: (id: number) => void
+  visibleModals: Ref<Set<HTMLElement>>;
+  addVisibleModals: (el: HTMLElement) => void
+  removeVisibleModals: (el: HTMLElement) => void
 }
 
 const PLUGIN_NAME = 'VueUniversalModal'
@@ -35,14 +35,12 @@ const install: (app: App, options: PluginOptions) => void = (app, options = {}) 
     return console.error('teleportComponent, teleportComponentId was deprecated. use teleportTarget instead. (https://github.com/hoiheart/vue-universal-modal)')
   }
 
-  const visibleModals: Ref<number[]> = ref([])
-  const addVisibleModals = (id: number) => {
-    visibleModals.value = [...visibleModals.value, id]
+  const visibleModals: Provide['visibleModals'] = ref(new Set())
+  const addVisibleModals: Provide['addVisibleModals'] = (el) => {
+    visibleModals.value.add(el)
   }
-  const removeVisibleModals = (id: number) => {
-    const modals = [...visibleModals.value]
-    modals.splice(visibleModals.value.indexOf(id), 1)
-    visibleModals.value = [...modals]
+  const removeVisibleModals: Provide['removeVisibleModals'] = (el) => {
+    visibleModals.value.delete(el)
   }
 
   app.provide(PLUGIN_NAME, {

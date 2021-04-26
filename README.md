@@ -12,9 +12,9 @@ Universal modal plugin for Vue@3
 - [Install plugin](#install-plugin)
   * [Options](#options)
 - [Usage modal](#usage-modal)
+  * [v1.0.x -> v1.1.x change point](#v10x----v11x-change-point)
   * [props](#props)
     + [props.options](#propsoptions)
-  * [slot arguments](#slot-arguments)
   * [emit events](#emit-events)
 - [Handle global CSS](#handle-global-css)
 - [Example](#example)
@@ -145,6 +145,7 @@ export default defineComponent({
 
 > ### v1.0.x -> v1.1.x change point
 > * Use `v-model` instead of v-if for modal component insertion
+> * If you control the insertion of components with v-if, the close animation will not work.
 > * `emitClose` slot argument was deprecated.
 
 ### props
