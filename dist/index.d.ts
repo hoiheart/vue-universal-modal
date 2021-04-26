@@ -7,9 +7,9 @@ interface PluginOptions {
 }
 interface Provide {
     teleportTarget: string;
-    visibleModals: Ref<number[]>;
-    addVisibleModals: (id: number) => void;
-    removeVisibleModals: (id: number) => void;
+    visibleModals: Ref<Set<HTMLElement>>;
+    addVisibleModals: (el: HTMLElement) => void;
+    removeVisibleModals: (el: HTMLElement) => void;
 }
 declare const PLUGIN_NAME = "VueUniversalModal";
 declare const CLASS_NAME = "vue-universal-modal";

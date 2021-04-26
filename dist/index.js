@@ -1,65 +1,5 @@
-import { inject, getCurrentInstance, computed, watch, onMounted, onUnmounted, nextTick, defineComponent, toRefs, ref, openBlock, createBlock, Teleport, createVNode, Transition, mergeProps, toHandlers, withCtx, withDirectives, withModifiers, renderSlot, vShow, createCommentVNode, readonly } from 'vue';
+import { onMounted, watch, nextTick, onUnmounted, inject, computed, defineComponent, toRefs, ref, openBlock, createBlock, Teleport, createVNode, Transition, mergeProps, toHandlers, withCtx, withDirectives, withModifiers, renderSlot, vShow, createCommentVNode, readonly } from 'vue';
 
-const useOrder = ({ modelValue, show }) => {
-    const { visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME);
-    const { uid } = getCurrentInstance() || {};
-    const latest = computed(() => {
-        if (!uid || !visibleModals.value.length)
-            return false;
-        return uid === visibleModals.value[visibleModals.value.length - 1];
-    });
-    watch([
-        () => modelValue.value,
-        () => show.value
-    ], () => {
-        if (!uid) {
-            return;
-        }
-        const isShow = modelValue.value && show.value;
-        if (isShow && visibleModals.value.indexOf(uid) < 0) {
-            addVisibleModals(uid);
-        }
-        if (!isShow && visibleModals.value.indexOf(uid) > -1) {
-            removeVisibleModals(uid);
-        }
-    }, { immediate: true });
-    return {
-        latest
-    };
-};
-const useClose = ({ close, options, latest }) => {
-    const mergeOptions = {
-        transition: 300,
-        closeClickDimmed: true,
-        closeKeyCode: 27,
-        styleModalContent: {},
-        ...options.value
-    };
-    function onClickDimmed() {
-        if (mergeOptions.closeClickDimmed) {
-            close.value();
-        }
-    }
-    function closeKeyEvent(event) {
-        if (event.keyCode === mergeOptions.closeKeyCode && latest.value) {
-            close.value();
-        }
-    }
-    onMounted(() => {
-        if (mergeOptions.closeKeyCode) {
-            document.addEventListener('keyup', closeKeyEvent);
-        }
-    });
-    onUnmounted(() => {
-        if (mergeOptions.closeKeyCode) {
-            document.removeEventListener('keyup', closeKeyEvent);
-        }
-    });
-    return {
-        mergeOptions,
-        onClickDimmed
-    };
-};
 const useA11Y = ({ modalRef, latest, show }) => {
     let activeElement;
     function setLastActiveElement(event) {
@@ -70,25 +10,26 @@ const useA11Y = ({ modalRef, latest, show }) => {
         // set activeElement when fired outside this modal
         if (!isModalEvent || (isModalEvent !== modalRef.value)) {
             // skip when modal status is closing
-            if (isModalEvent && !isModalEvent.classList.contains(`${CLASS_NAME}-show`))
+            if (isModalEvent && !isModalEvent.classList.contains(`${CLASS_NAME}-show`)) {
                 return;
+            }
             activeElement = event.target;
+        }
+    }
+    function setFocus(value) {
+        if (value) {
+            if (modalRef.value) {
+                modalRef.value.focus();
+            }
+        }
+        else {
+            if (activeElement) {
+                activeElement.focus();
+            }
         }
     }
     onMounted(() => {
         document.addEventListener('click', setLastActiveElement);
-        function setFocus(value) {
-            if (value) {
-                if (modalRef.value) {
-                    modalRef.value.focus();
-                }
-            }
-            else {
-                if (activeElement) {
-                    activeElement.focus();
-                }
-            }
-        }
         watch(() => show.value, (value) => {
             nextTick(() => setFocus(value));
         }, { immediate: show.value });
@@ -97,15 +38,63 @@ const useA11Y = ({ modalRef, latest, show }) => {
         document.removeEventListener('click', setLastActiveElement);
     });
 };
+const useClose = ({ close, closeClickDimmed, closeKeyCode, latest }) => {
+    function onClickDimmed() {
+        if (closeClickDimmed) {
+            close.value();
+        }
+    }
+    function closeKeyEvent(event) {
+        if (event.keyCode === closeKeyCode && latest.value) {
+            close.value();
+        }
+    }
+    onMounted(() => {
+        if (closeKeyCode) {
+            document.addEventListener('keyup', closeKeyEvent);
+        }
+    });
+    onUnmounted(() => {
+        if (closeKeyCode) {
+            document.removeEventListener('keyup', closeKeyEvent);
+        }
+    });
+    return {
+        onClickDimmed
+    };
+};
+const useOrder = ({ modalRef, show }) => {
+    const { visibleModals, addVisibleModals, removeVisibleModals } = inject(PLUGIN_NAME);
+    const latest = computed(() => {
+        const arr = [...visibleModals.value.values()];
+        if (!arr.length || !modalRef.value) {
+            return false;
+        }
+        return arr[arr.length - 1] === modalRef.value;
+    });
+    watch(() => show.value, () => {
+        nextTick(() => {
+            if (!modalRef.value)
+                return;
+            if (show.value) {
+                addVisibleModals(modalRef.value);
+            }
+            else {
+                removeVisibleModals(modalRef.value);
+            }
+        });
+    }, { immediate: true });
+    return {
+        latest
+    };
+};
 
 var script = defineComponent({
     inheritAttrs: false,
     props: {
         close: {
             type: Function,
-            default: () => {
-                return undefined;
-            }
+            default: () => undefined
         },
         disabled: {
             type: Boolean,
@@ -117,9 +106,7 @@ var script = defineComponent({
         },
         options: {
             type: Object,
-            default: () => {
-                return {};
-            }
+            default: () => ({})
         }
     },
     emits: [
@@ -138,6 +125,13 @@ var script = defineComponent({
         const inserted = ref(modelValue.value === undefined ? true : modelValue.value);
         const modalRef = ref(null);
         const show = ref(!disabled.value);
+        const mergeOptions = {
+            transition: 300,
+            closeClickDimmed: true,
+            closeKeyCode: 27,
+            styleModalContent: {},
+            ...options.value
+        };
         watch([
             () => modelValue.value,
             () => disabled.value
@@ -148,9 +142,14 @@ var script = defineComponent({
                 inserted.value = modelValue.value;
             }
         }, { immediate: true });
-        const { latest } = useOrder({ modelValue, show });
-        const { mergeOptions, onClickDimmed } = useClose({ close, latest, options });
+        const { latest } = useOrder({ modalRef, show });
         useA11Y({ latest, modalRef, show });
+        const { onClickDimmed } = useClose({
+            close,
+            closeClickDimmed: mergeOptions.closeClickDimmed,
+            closeKeyCode: mergeOptions.closeKeyCode,
+            latest
+        });
         const onTransitionEmit = {
             beforeEnter: () => context.emit('before-enter'),
             enter: () => context.emit('enter'),
@@ -248,14 +247,12 @@ const install = (app, options = {}) => {
     if (teleportComponent || teleportComponentId) {
         return console.error('teleportComponent, teleportComponentId was deprecated. use teleportTarget instead. (https://github.com/hoiheart/vue-universal-modal)');
     }
-    const visibleModals = ref([]);
-    const addVisibleModals = (id) => {
-        visibleModals.value = [...visibleModals.value, id];
+    const visibleModals = ref(new Set());
+    const addVisibleModals = (el) => {
+        visibleModals.value.add(el);
     };
-    const removeVisibleModals = (id) => {
-        const modals = [...visibleModals.value];
-        modals.splice(visibleModals.value.indexOf(id), 1);
-        visibleModals.value = [...modals];
+    const removeVisibleModals = (el) => {
+        visibleModals.value.delete(el);
     };
     app.provide(PLUGIN_NAME, {
         teleportTarget,

@@ -1,3 +1,11 @@
+interface MergeOptions {
+    transition: number | false;
+    closeClickDimmed: boolean;
+    closeKeyCode: number | false;
+    styleModalContent: {
+        [key: string]: unknown;
+    };
+}
 declare const _default: import("vue").DefineComponent<{
     close: {
         type: FunctionConstructor;
@@ -20,14 +28,7 @@ declare const _default: import("vue").DefineComponent<{
     emitClose: () => void;
     inserted: import("vue").Ref<boolean>;
     latest: import("vue").ComputedRef<boolean>;
-    mergeOptions: {
-        transition: number | false;
-        closeClickDimmed: boolean;
-        closeKeyCode: number | false;
-        styleModalContent: {
-            [key: string]: unknown;
-        };
-    };
+    mergeOptions: MergeOptions;
     modalRef: import("vue").Ref<null>;
     onClickDimmed: () => void;
     onTransitionEmit: {
