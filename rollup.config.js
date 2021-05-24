@@ -5,7 +5,7 @@ import vue from 'rollup-plugin-vue'
 import autoprefixer from 'autoprefixer'
 import typescript from 'rollup-plugin-typescript2'
 import css from 'rollup-plugin-css-only'
-import babel from '@rollup/plugin-babel'
+import babel, { getBabelOutputPlugin } from '@rollup/plugin-babel'
 
 const options = {
   input: 'src/index.ts',
@@ -39,7 +39,17 @@ export default [
     output: {
       file: 'dist/index.js',
       format: 'esm'
-    }
+    },
+    plugins: [
+      ...options.plugins,
+      getBabelOutputPlugin({ plugins: ['@babel/plugin-proposal-optional-chaining'] })
+      // babel({
+      //   babelHelpers: 'runtime',
+      //   exclude: /node_modules/,
+      //   extensions: ['.ts', '.tsx', '.js', '.jsx', '.es6', '.es', '.mjs', '.vue'],
+      //   plugins: ['@babel/plugin-proposal-optional-chaining']
+      // })
+    ]
   },
   // es5 build
   {
