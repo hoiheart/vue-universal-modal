@@ -43,12 +43,6 @@ export default [
     plugins: [
       ...options.plugins,
       getBabelOutputPlugin({ plugins: ['@babel/plugin-proposal-optional-chaining'] })
-      // babel({
-      //   babelHelpers: 'runtime',
-      //   exclude: /node_modules/,
-      //   extensions: ['.ts', '.tsx', '.js', '.jsx', '.es6', '.es', '.mjs', '.vue'],
-      //   plugins: ['@babel/plugin-proposal-optional-chaining']
-      // })
     ]
   },
   // es5 build
