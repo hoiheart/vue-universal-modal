@@ -143,7 +143,7 @@ export default defineComponent({
      */
     const emitClose = () => {
       console.warn('emitClose was deprecated.\nhttps://github.com/hoiheart/vue-universal-modal#usage-modal')
-      close.value()
+      if (close.value) close.value()
     }
 
     return {
