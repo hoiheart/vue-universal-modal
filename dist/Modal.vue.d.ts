@@ -30,7 +30,8 @@ declare const _default: import("vue").DefineComponent<{
     latest: import("vue").ComputedRef<boolean>;
     mergeOptions: MergeOptions;
     modalRef: import("vue").Ref<null>;
-    onClickDimmed: () => void;
+    onMouseDownDimmed: (e: MouseEvent) => void;
+    onMouseUpDimmed: (e: MouseEvent) => void;
     onTransitionEmit: {
         beforeEnter: () => void;
         enter: () => void;
@@ -45,11 +46,17 @@ declare const _default: import("vue").DefineComponent<{
     teleportTarget: string;
     transition: string | boolean;
 }, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("before-enter" | "enter" | "after-enter" | "enter-cancelled" | "before-leave" | "leave" | "after-leave" | "leave-cancelled")[], "before-enter" | "enter" | "after-enter" | "enter-cancelled" | "before-leave" | "leave" | "after-leave" | "leave-cancelled", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
-    close: Function;
+    close?: unknown;
+    disabled?: unknown;
+    modelValue?: unknown;
+    options?: unknown;
+} & {
     disabled: boolean;
     modelValue: boolean;
     options: Record<string, any>;
-} & {}>, {
+} & {
+    close?: Function | undefined;
+}>, {
     close: Function;
     disabled: boolean;
     modelValue: boolean;

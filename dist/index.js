@@ -53,10 +53,18 @@ const useClose = ({
   closeKeyCode,
   latest
 }) => {
-  function onClickDimmed() {
-    if (closeClickDimmed) {
+  let actionTarget = null;
+
+  function onMouseDownDimmed(e) {
+    actionTarget = e.target;
+  }
+
+  function onMouseUpDimmed(e) {
+    if (closeClickDimmed && actionTarget === e.target) {
       close.value();
     }
+
+    actionTarget = null;
   }
 
   function closeKeyEvent(event) {
@@ -76,7 +84,8 @@ const useClose = ({
     }
   });
   return {
-    onClickDimmed
+    onMouseDownDimmed,
+    onMouseUpDimmed
   };
 };
 
@@ -180,7 +189,8 @@ var script = defineComponent({
       show
     });
     const {
-      onClickDimmed
+      onMouseDownDimmed,
+      onMouseUpDimmed
     } = useClose({
       close,
       closeClickDimmed: mergeOptions.closeClickDimmed,
@@ -209,7 +219,7 @@ var script = defineComponent({
 
     const emitClose = () => {
       console.warn('emitClose was deprecated.\nhttps://github.com/hoiheart/vue-universal-modal#usage-modal');
-      close.value();
+      if (close.value) close.value();
     };
 
     return {
@@ -219,7 +229,8 @@ var script = defineComponent({
       latest,
       mergeOptions,
       modalRef,
-      onClickDimmed,
+      onMouseDownDimmed,
+      onMouseUpDimmed,
       onTransitionEmit,
       show,
       teleportTarget,
@@ -261,11 +272,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           transitionDuration: _ctx.transition,
           ...((_ctx$mergeOptions = _ctx.mergeOptions) === null || _ctx$mergeOptions === void 0 ? void 0 : _ctx$mergeOptions.styleModalContent)
         },
-        onClick: _cache[1] || (_cache[1] = withModifiers((...args) => _ctx.onClickDimmed && _ctx.onClickDimmed(...args), ["self"]))
+        onMousedown: _cache[1] || (_cache[1] = withModifiers((...args) => _ctx.onMouseDownDimmed && _ctx.onMouseDownDimmed(...args), ["self"])),
+        onMouseup: _cache[2] || (_cache[2] = (...args) => _ctx.onMouseUpDimmed && _ctx.onMouseUpDimmed(...args))
       }, [renderSlot(_ctx.$slots, "default", {
         emitClose: _ctx.emitClose
-      }), renderSlot(_ctx.$slots, "close")], 6
-      /* CLASS, STYLE */
+      }), renderSlot(_ctx.$slots, "close")], 38
+      /* CLASS, STYLE, HYDRATE_EVENTS */
       )], 16
       /* FULL_PROPS */
       ), [[vShow, _ctx.show]])];

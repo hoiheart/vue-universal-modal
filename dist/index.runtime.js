@@ -1733,11 +1733,18 @@
 	      closeClickDimmed = _ref2.closeClickDimmed,
 	      closeKeyCode = _ref2.closeKeyCode,
 	      latest = _ref2.latest;
+	  var actionTarget = null;
 
-	  function onClickDimmed() {
-	    if (closeClickDimmed) {
+	  function onMouseDownDimmed(e) {
+	    actionTarget = e.target;
+	  }
+
+	  function onMouseUpDimmed(e) {
+	    if (closeClickDimmed && actionTarget === e.target) {
 	      close.value();
 	    }
+
+	    actionTarget = null;
 	  }
 
 	  function closeKeyEvent(event) {
@@ -1757,7 +1764,8 @@
 	    }
 	  });
 	  return {
-	    onClickDimmed: onClickDimmed
+	    onMouseDownDimmed: onMouseDownDimmed,
+	    onMouseUpDimmed: onMouseUpDimmed
 	  };
 	};
 	var useOrder = function useOrder(_ref3) {
@@ -1877,7 +1885,8 @@
 	      closeKeyCode: mergeOptions.closeKeyCode,
 	      latest: latest
 	    }),
-	        onClickDimmed = _useClose.onClickDimmed;
+	        onMouseDownDimmed = _useClose.onMouseDownDimmed,
+	        onMouseUpDimmed = _useClose.onMouseUpDimmed;
 
 	    var onTransitionEmit = {
 	      beforeEnter: function beforeEnter() {
@@ -1915,7 +1924,7 @@
 
 	    var emitClose = function emitClose() {
 	      console.warn('emitClose was deprecated.\nhttps://github.com/hoiheart/vue-universal-modal#usage-modal');
-	      close.value();
+	      if (close.value) close.value();
 	    };
 
 	    return {
@@ -1925,7 +1934,8 @@
 	      latest: latest,
 	      mergeOptions: mergeOptions,
 	      modalRef: modalRef,
-	      onClickDimmed: onClickDimmed,
+	      onMouseDownDimmed: onMouseDownDimmed,
+	      onMouseUpDimmed: onMouseUpDimmed,
 	      onTransitionEmit: onTransitionEmit,
 	      show: show,
 	      teleportTarget: teleportTarget,
@@ -1961,13 +1971,16 @@
 	        style: _objectSpread2({
 	          transitionDuration: _ctx.transition
 	        }, (_ctx$mergeOptions = _ctx.mergeOptions) === null || _ctx$mergeOptions === void 0 ? void 0 : _ctx$mergeOptions.styleModalContent),
-	        onClick: _cache[1] || (_cache[1] = vue.withModifiers(function () {
-	          return _ctx.onClickDimmed && _ctx.onClickDimmed.apply(_ctx, arguments);
-	        }, ["self"]))
+	        onMousedown: _cache[1] || (_cache[1] = vue.withModifiers(function () {
+	          return _ctx.onMouseDownDimmed && _ctx.onMouseDownDimmed.apply(_ctx, arguments);
+	        }, ["self"])),
+	        onMouseup: _cache[2] || (_cache[2] = function () {
+	          return _ctx.onMouseUpDimmed && _ctx.onMouseUpDimmed.apply(_ctx, arguments);
+	        })
 	      }, [vue.renderSlot(_ctx.$slots, "default", {
 	        emitClose: _ctx.emitClose
-	      }), vue.renderSlot(_ctx.$slots, "close")], 6
-	      /* CLASS, STYLE */
+	      }), vue.renderSlot(_ctx.$slots, "close")], 38
+	      /* CLASS, STYLE, HYDRATE_EVENTS */
 	      )], 16
 	      /* FULL_PROPS */
 	      ), [[vue.vShow, _ctx.show]])];

@@ -10,7 +10,8 @@ declare type UseClose = ({ close, closeKeyCode, latest }: {
     closeKeyCode: number | false;
     latest: ComputedRef<boolean>;
 }) => {
-    onClickDimmed: () => void;
+    onMouseDownDimmed: (e: MouseEvent) => void;
+    onMouseUpDimmed: (e: MouseEvent) => void;
 };
 declare type UseOrder = ({ modalRef, show }: {
     modalRef: Ref<HTMLElement | null>;
