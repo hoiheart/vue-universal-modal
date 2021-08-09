@@ -30,7 +30,8 @@
             transitionDuration: transition,
             ...mergeOptions?.styleModalContent
           }"
-          @click.self="onClickDimmed"
+          @mousedown.self="onMouseDownDimmed"
+          @mouseup="onMouseUpDimmed"
         >
           <slot :emitClose="emitClose" />
           <slot name="close" />
@@ -115,7 +116,7 @@ export default defineComponent({
 
     const { latest } = useOrder({ modalRef, show })
     useA11Y({ latest, modalRef, show })
-    const { onClickDimmed } = useClose({
+    const { onMouseDownDimmed, onMouseUpDimmed } = useClose({
       close,
       closeClickDimmed: mergeOptions.closeClickDimmed,
       closeKeyCode: mergeOptions.closeKeyCode,
@@ -153,7 +154,8 @@ export default defineComponent({
       latest,
       mergeOptions,
       modalRef,
-      onClickDimmed,
+      onMouseDownDimmed,
+      onMouseUpDimmed,
       onTransitionEmit,
       show,
       teleportTarget,
