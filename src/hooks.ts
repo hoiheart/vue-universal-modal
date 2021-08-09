@@ -16,7 +16,8 @@ type UseClose = ({ close, closeKeyCode, latest }: {
   closeKeyCode: number | false;
   latest: ComputedRef<boolean>;
 }) => {
-  onClickDimmed: () => void
+  onMouseDownDimmed: (e: MouseEvent) => void
+  onMouseUpDimmed: (e: MouseEvent) => void
 }
 
 type UseOrder = ({ modalRef, show }: {
@@ -70,10 +71,17 @@ export const useA11Y: UseA11Y = ({ modalRef, latest, show }) => {
 }
 
 export const useClose: UseClose = ({ close, closeClickDimmed, closeKeyCode, latest }) => {
-  function onClickDimmed () {
-    if (closeClickDimmed) {
+  let actionTarget: null|EventTarget = null
+
+  function onMouseDownDimmed (e: MouseEvent) {
+    actionTarget = e.target
+  }
+
+  function onMouseUpDimmed (e: MouseEvent) {
+    if (closeClickDimmed && actionTarget === e.target) {
       close.value()
     }
+    actionTarget = null
   }
 
   function closeKeyEvent (event: KeyboardEvent) {
@@ -95,7 +103,8 @@ export const useClose: UseClose = ({ close, closeClickDimmed, closeKeyCode, late
   })
 
   return {
-    onClickDimmed
+    onMouseDownDimmed,
+    onMouseUpDimmed
   }
 }
 
