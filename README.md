@@ -101,7 +101,7 @@ Insert the component wrapped with the modal component. (Slot based)
         Hello
       </p>
       <button @click="closeModal">
-        close
+        Close
       </button>
     </div>
   </Modal>
