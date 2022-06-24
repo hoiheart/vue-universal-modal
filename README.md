@@ -10,15 +10,14 @@ Universal modal plugin for Vue@3
 - [Introduction](#introduction)
 - [Features](#features)
 - [Install plugin](#install-plugin)
-  * [Options](#options)
+  - [Options](#options)
 - [Usage modal](#usage-modal)
-  * [v1.0.x -> v1.1.x change point](#v10x----v11x-change-point)
-  * [props](#props)
-    + [props.options](#propsoptions)
-  * [emit events](#emit-events)
+  - [v1.0.x -> v1.1.x change point](#v10x----v11x-change-point)
+  - [props](#props)
+    - [props.options](#propsoptions)
+  - [emit events](#emit-events)
 - [Handle global CSS](#handle-global-css)
 - [Example](#example)
-
 
 ## Introduction
 
@@ -29,10 +28,10 @@ Here is the <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.h
 
 ## Features
 
-* Based on the teleport
-* Provides essential features for modal
-* A11Y
-* Support SSR (Insert rendering source into SSR context, Mount from Client-side)
+- Based on the teleport
+- Provides essential features for modal
+- A11Y
+- Support SSR (Insert rendering source into SSR context, Mount from Client-side)
 
 ## Install plugin
 
@@ -44,9 +43,9 @@ Insert teleport element in your html
 
 ```html
 ...
-  <div id="app"></div>
-  <!-- teleport target -->
-  <div id="modals"></div>
+<div id="app"></div>
+<!-- teleport target -->
+<div id="modals"></div>
 ...
 ```
 
@@ -55,13 +54,13 @@ Insert teleport element in your html
 And install plugin in vue application
 
 ```ts
-import 'vue-universal-modal/dist/index.css'
+import 'vue-universal-modal/dist/index.css';
 
-import VueUniversalModal from 'vue-universal-modal'
+import VueUniversalModal from 'vue-universal-modal';
 
 app.use(VueUniversalModal, {
-  teleportTarget: '#modals'
-})
+  teleportTarget: '#modals',
+});
 ```
 
 ### Options
@@ -70,13 +69,13 @@ app.use(VueUniversalModal, {
 app.use(VueUniversalModal, {
   teleportTarget: '#my-modals',
   modalComponent: 'MyModal',
-})
+});
 ```
 
-| name | type | detault | description |
-|- | - | - | - |
-| teleportTarget **(required)** | `string` | | <a href="https://v3.vuejs.org/api/built-in-components.html#teleport" target="_blank">Teleport target</a> |
-| modalComponent | `string` | `'Modal'` | Global modal component name |
+| name                          | type     | detault   | description                                                                                              |
+| ----------------------------- | -------- | --------- | -------------------------------------------------------------------------------------------------------- |
+| teleportTarget **(required)** | `string` |           | <a href="https://v3.vuejs.org/api/built-in-components.html#teleport" target="_blank">Teleport target</a> |
+| modalComponent                | `string` | `'Modal'` | Global modal component name                                                                              |
 
 ## Usage modal
 
@@ -85,50 +84,41 @@ Insert the component wrapped with the modal component. (Slot based)
 ```vue
 <template>
   <p>
-    <button @click="showModal">
-      Show modal
-    </button>
+    <button @click="showModal">Show modal</button>
   </p>
   <!-- If the option changed modal component the name
   <MyModal>
   -->
-  <Modal
-    v-model="isShow"
-    :close="closeModal"
-  >
+  <Modal v-model="isShow" :close="closeModal">
     <div class="modal">
-      <p>
-        Hello
-      </p>
-      <button @click="closeModal">
-        close
-      </button>
+      <p>Hello</p>
+      <button @click="closeModal">close</button>
     </div>
   </Modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-  setup () {
-    const isShow = ref(false)
+  setup() {
+    const isShow = ref(false);
 
-    function showModal () {
-      isShow.value = true
+    function showModal() {
+      isShow.value = true;
     }
 
-    function closeModal () {
-      isShow.value = false
+    function closeModal() {
+      isShow.value = false;
     }
 
     return {
       isShow,
       showModal,
-      closeModal
-    }
-  }
-})
+      closeModal,
+    };
+  },
+});
 </script>
 
 <style scoped lang="scss">
@@ -144,37 +134,36 @@ export default defineComponent({
 ```
 
 > ### v1.0.x -> v1.1.x change point
-> * Use `v-model` instead of v-if for modal component insertion
-> * If you control the insertion of components with v-if, the close animation will not work.
-> * `emitClose` slot argument was deprecated.
+>
+> - Use `v-model` instead of v-if for modal component insertion
+> - If you control the insertion of components with v-if, the close animation will not work.
+> - `emitClose` slot argument was deprecated.
 
 ### props
 
-| name | type | detault | description |
-|- | - | - | - |
-| close | `function` | `() => {}` | Function to close a modal (apply when click dimmed) |
-| disabled | `boolean` | `false` | Handle just visibility (as in v-show) |
-| options | `object` | `{}` |  |
+| name     | type       | detault    | description                                         |
+| -------- | ---------- | ---------- | --------------------------------------------------- |
+| close    | `function` | `() => {}` | Function to close a modal (apply when click dimmed) |
+| disabled | `boolean`  | `false`    | Handle just visibility (as in v-show)               |
+| options  | `object`   | `{}`       |                                                     |
 
 #### props.options
 
-| name | type | detault | description |
-|- | - | - | - |
-| transition | `number` &#124; `false` | `300` | transition duration |
-| closeClickDimmed | `boolean` | `true` | Closes the modal when dimmed is clicked |
-| closeKeyCode | `number` &#124; `false` | `27` (esc) | Closes the modal when press key |
-| styleModalContent | `object` | `{}` | Inject modal content style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">`.vue-universal-modal-content`</a>)|
+| name              | type                    | detault    | description                                                                                                                                                       |
+| ----------------- | ----------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| transition        | `number` &#124; `false` | `300`      | transition duration                                                                                                                                               |
+| closeClickDimmed  | `boolean`               | `true`     | Closes the modal when dimmed is clicked                                                                                                                           |
+| closeKeyCode      | `number` &#124; `false` | `27` (esc) | Closes the modal when press key                                                                                                                                   |
+| styleModalContent | `object`                | `{}`       | Inject modal content style (<a href="https://github.com/hoiheart/vue-universal-modal/blob/main/src/Modal.vue" target="_blank">`.vue-universal-modal-content`</a>) |
 
 ### emit events
 
-Supports emit properties for all <a href="https://v3.vuejs.org/guide/transitions-enterleave.html#javascript-hooks">transition events.</a>  
+Supports emit properties for all <a href="https://v3.vuejs.org/guide/transitions-enterleave.html#javascript-hooks">transition events.</a>
 
 ```vue
 <template>
   <p>
-    <button @click="showModal">
-      Show modal
-    </button>
+    <button @click="showModal">Show modal</button>
   </p>
   <Modal
     v-model="isShow"
@@ -185,45 +174,41 @@ Supports emit properties for all <a href="https://v3.vuejs.org/guide/transitions
     @after-leave="afterLeave"
   >
     <div class="modal">
-      <p>
-        Hello
-      </p>
-      <button @click="closeModal">
-        close
-      </button>
+      <p>Hello</p>
+      <button @click="closeModal">close</button>
     </div>
   </Modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-  setup () {
-    const isShow = ref(false)
+  setup() {
+    const isShow = ref(false);
 
-    function showModal () {
-      isShow.value = true
+    function showModal() {
+      isShow.value = true;
     }
 
-    function closeModal () {
-      isShow.value = false
+    function closeModal() {
+      isShow.value = false;
     }
 
-    function beforeEnter () {
-      console.log('before enter')
+    function beforeEnter() {
+      console.log('before enter');
     }
 
-    function afterEnter () {
-      console.log('after enter')
+    function afterEnter() {
+      console.log('after enter');
     }
 
-    function beforeLeave () {
-      console.log('before leave')
+    function beforeLeave() {
+      console.log('before leave');
     }
 
-    function afterLeave () {
-      console.log('after leave')
+    function afterLeave() {
+      console.log('after leave');
     }
 
     return {
@@ -233,16 +218,16 @@ export default defineComponent({
       beforeEnter,
       afterEnter,
       beforeLeave,
-      afterLeave
-    }
-  }
-})
+      afterLeave,
+    };
+  },
+});
 </script>
 ```
 
 ## Handle global CSS
 
-You can change it directly to your own style by referring to the <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/src/Modal.vue" target="_blank">source</a>
+You can change it directly to your own style by referring to the <a href="https://github.com/hoiheart/vue-universal-modal/blob/main/src/Modal.vue" target="_blank">source</a>
 
 ```css
 .vue-universal-modal {
@@ -257,7 +242,7 @@ You can change it directly to your own style by referring to the <a href="https:
 
 ## Example
 
-* <a href="https://github.com/hoiheart/vue-universal-modal/blob/master/example" target="_blank">Source</a>
-* <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
-* <a href="https://hoiheart.github.io/vue-universal-modal/example/runtime.html" target="_blank">Runtime</a>
-* <a href="https://codesandbox.io/s/icy-voice-v477v?file=/src/index.js" target="_blank">Get SSR Context</a>
+- <a href="https://github.com/hoiheart/vue-universal-modal/blob/main/example" target="_blank">Source</a>
+- <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
+- <a href="https://hoiheart.github.io/vue-universal-modal/example/runtime.html" target="_blank">Runtime</a>
+- <a href="https://codesandbox.io/s/icy-voice-v477v?file=/src/index.js" target="_blank">Get SSR Context</a>

@@ -10,7 +10,7 @@
       Show modal1
     </button>
     <a
-      href="https://github.com/hoiheart/vue-universal-modal/blob/master/example/6.wai-aria.vue"
+      href="https://github.com/hoiheart/vue-universal-modal/blob/main/example/6.wai-aria.vue"
       target="_blank"
       :class="style.button"
       class="ml-2"

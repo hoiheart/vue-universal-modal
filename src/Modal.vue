@@ -1,14 +1,6 @@
 <template>
-  <teleport
-    v-if="inserted"
-    :to="teleportTarget"
-    :disabled="disabled"
-  >
-    <transition
-      appear
-      :name="CLASS_NAME"
-      v-on="onTransitionEmit"
-    >
+  <teleport v-if="inserted" :to="teleportTarget" :disabled="disabled">
+    <transition appear :name="CLASS_NAME" v-on="onTransitionEmit">
       <div
         v-show="show"
         ref="modalRef"
@@ -28,7 +20,7 @@
           :class="`${CLASS_NAME}-content`"
           :style="{
             transitionDuration: transition,
-            ...mergeOptions?.styleModalContent
+            ...mergeOptions?.styleModalContent,
           }"
           @mousedown.self="onMouseDownDimmed"
           @mouseup="onMouseUpDimmed"
@@ -42,11 +34,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, toRefs, watch } from 'vue'
-import { PLUGIN_NAME, CLASS_NAME } from './index'
-import { useA11Y, useClose, useOrder } from './hooks'
+import { defineComponent, inject, ref, toRefs, watch } from 'vue';
+import { PLUGIN_NAME, CLASS_NAME } from './index';
+import { useA11Y, useClose, useOrder } from './hooks';
 
-import type { Provide } from './index'
+import type { Provide } from './index';
 
 interface MergeOptions {
   transition: number | false;
@@ -60,20 +52,20 @@ export default defineComponent({
   props: {
     close: {
       type: Function,
-      default: () => undefined
+      default: () => undefined,
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     modelValue: {
       type: Boolean,
-      default: true
+      default: true,
     },
     options: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   emits: [
     'before-enter',
@@ -83,45 +75,48 @@ export default defineComponent({
     'before-leave',
     'leave',
     'after-leave',
-    'leave-cancelled'
+    'leave-cancelled',
   ],
-  setup (props, context) {
-    const { teleportTarget } = inject(PLUGIN_NAME) as Provide
-    const { close, disabled, options, modelValue } = toRefs(props)
+  setup(props, context) {
+    const { teleportTarget } = inject(PLUGIN_NAME) as Provide;
+    const { close, disabled, options, modelValue } = toRefs(props);
 
-    const inserted = ref(modelValue.value === undefined ? true : modelValue.value)
-    const modalRef = ref(null)
-    const show = ref(!disabled.value)
+    const inserted = ref(
+      modelValue.value === undefined ? true : modelValue.value,
+    );
+    const modalRef = ref(null);
+    const show = ref(!disabled.value);
 
     const mergeOptions: MergeOptions = {
       transition: 300,
       closeClickDimmed: true,
       closeKeyCode: 27,
       styleModalContent: {},
-      ...options.value
-    }
+      ...options.value,
+    };
 
-    watch([
-      () => modelValue.value,
-      () => disabled.value
-    ], () => {
-      const isShow = modelValue.value && !disabled.value
+    watch(
+      [() => modelValue.value, () => disabled.value],
+      () => {
+        const isShow = modelValue.value && !disabled.value;
 
-      show.value = isShow
+        show.value = isShow;
 
-      if (modelValue.value) {
-        inserted.value = modelValue.value
-      }
-    }, { immediate: true })
+        if (modelValue.value) {
+          inserted.value = modelValue.value;
+        }
+      },
+      { immediate: true },
+    );
 
-    const { latest } = useOrder({ modalRef, show })
-    useA11Y({ latest, modalRef, show })
+    const { latest } = useOrder({ modalRef, show });
+    useA11Y({ latest, modalRef, show });
     const { onMouseDownDimmed, onMouseUpDimmed } = useClose({
       close,
       closeClickDimmed: mergeOptions.closeClickDimmed,
       closeKeyCode: mergeOptions.closeKeyCode,
-      latest
-    })
+      latest,
+    });
 
     const onTransitionEmit = {
       beforeEnter: () => context.emit('before-enter'),
@@ -131,21 +126,23 @@ export default defineComponent({
       beforeLeave: () => context.emit('before-leave'),
       leave: () => context.emit('leave'),
       afterLeave: () => {
-        context.emit('after-leave')
+        context.emit('after-leave');
         if (modelValue.value === false) {
-          inserted.value = false
+          inserted.value = false;
         }
       },
-      leaveCancelled: () => context.emit('leave-cancelled')
-    }
+      leaveCancelled: () => context.emit('leave-cancelled'),
+    };
 
     /**
      * @deprecated
      */
     const emitClose = () => {
-      console.warn('emitClose was deprecated.\nhttps://github.com/hoiheart/vue-universal-modal#usage-modal')
-      if (close.value) close.value()
-    }
+      console.warn(
+        'emitClose was deprecated.\nhttps://github.com/hoiheart/vue-universal-modal#usage-modal',
+      );
+      if (close.value) close.value();
+    };
 
     return {
       CLASS_NAME,
@@ -159,10 +156,12 @@ export default defineComponent({
       onTransitionEmit,
       show,
       teleportTarget,
-      transition: mergeOptions.transition ? mergeOptions.transition / 1000 + 's' : false
-    }
-  }
-})
+      transition: mergeOptions.transition
+        ? mergeOptions.transition / 1000 + 's'
+        : undefined,
+    };
+  },
+});
 </script>
 
 <style lang="scss">

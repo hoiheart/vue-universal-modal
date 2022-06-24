@@ -1,61 +1,72 @@
-import { ref, readonly } from 'vue'
-import Modal from './Modal.vue'
+import { ref, readonly } from 'vue';
+import Modal from './Modal.vue';
 
-import type { App, Ref } from 'vue'
+import type { App, Ref } from 'vue';
+
+declare module '@vue/runtime-core' {
+  export interface GlobalComponents {
+    Modal: typeof Modal;
+  }
+}
 
 interface PluginOptions {
-  teleportTarget?: string,
+  teleportTarget?: string;
   teleportComponent?: string;
   teleportComponentId?: string;
   modalComponent?: string;
 }
 interface Provide {
-  teleportTarget: string,
+  teleportTarget: string;
   visibleModals: Ref<Set<HTMLElement>>;
-  addVisibleModals: (el: HTMLElement) => void
-  removeVisibleModals: (el: HTMLElement) => void
+  addVisibleModals: (el: HTMLElement) => void;
+  removeVisibleModals: (el: HTMLElement) => void;
 }
 
-const PLUGIN_NAME = 'VueUniversalModal'
-const CLASS_NAME = 'vue-universal-modal'
+const PLUGIN_NAME = 'VueUniversalModal';
+const CLASS_NAME = 'vue-universal-modal';
 
-const install: (app: App, options: PluginOptions) => void = (app, options = {}) => {
+const install: (app: App, options: PluginOptions) => void = (
+  app,
+  options = {},
+) => {
   const {
     teleportTarget = '',
     teleportComponent = '',
     teleportComponentId = '',
-    modalComponent = 'Modal'
-  } = options as PluginOptions
+    modalComponent = 'Modal',
+  } = options as PluginOptions;
 
   if (!teleportTarget) {
-    return console.error('teleportTarget is required.')
+    return console.error('teleportTarget is required.');
   }
 
   if (teleportComponent || teleportComponentId) {
-    return console.error('teleportComponent, teleportComponentId was deprecated. use teleportTarget instead. (https://github.com/hoiheart/vue-universal-modal)')
+    return console.error(
+      'teleportComponent, teleportComponentId was deprecated. use teleportTarget instead. (https://github.com/hoiheart/vue-universal-modal)',
+    );
   }
 
-  const visibleModals: Provide['visibleModals'] = ref(new Set())
-  const addVisibleModals: Provide['addVisibleModals'] = (el) => {
-    visibleModals.value.add(el)
-  }
-  const removeVisibleModals: Provide['removeVisibleModals'] = (el) => {
-    visibleModals.value.delete(el)
-  }
+  const visibleModals: Provide['visibleModals'] = ref(new Set());
+  const addVisibleModals: Provide['addVisibleModals'] = el => {
+    visibleModals.value.add(el);
+  };
+  const removeVisibleModals: Provide['removeVisibleModals'] = el => {
+    visibleModals.value.delete(el);
+  };
 
   app.provide(PLUGIN_NAME, {
     teleportTarget,
     visibleModals: readonly(visibleModals),
     addVisibleModals,
-    removeVisibleModals
-  })
+    removeVisibleModals,
+  });
 
-  app.component(modalComponent, Modal)
-}
+  app.component(modalComponent, Modal);
+};
 
 export default {
-  install
-}
+  install,
+};
 
-export { PLUGIN_NAME, CLASS_NAME }
-export type { PluginOptions, Provide }
+export { PLUGIN_NAME, CLASS_NAME };
+export type { PluginOptions, Provide };

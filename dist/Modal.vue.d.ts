@@ -6,7 +6,7 @@ interface MergeOptions {
         [key: string]: unknown;
     };
 }
-declare const _default: import("vue").DefineComponent<{
+declare const _sfc_main: import("vue").DefineComponent<{
     close: {
         type: FunctionConstructor;
         default: () => undefined;
@@ -44,22 +44,37 @@ declare const _default: import("vue").DefineComponent<{
     };
     show: import("vue").Ref<boolean>;
     teleportTarget: string;
-    transition: string | boolean;
-}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("before-enter" | "enter" | "after-enter" | "enter-cancelled" | "before-leave" | "leave" | "after-leave" | "leave-cancelled")[], "before-enter" | "enter" | "after-enter" | "enter-cancelled" | "before-leave" | "leave" | "after-leave" | "leave-cancelled", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
-    close?: unknown;
-    disabled?: unknown;
-    modelValue?: unknown;
-    options?: unknown;
-} & {
-    disabled: boolean;
-    modelValue: boolean;
-    options: Record<string, any>;
-} & {
-    close?: Function | undefined;
-}>, {
+    transition: string | undefined;
+}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, ("before-enter" | "enter" | "after-enter" | "enter-cancelled" | "before-leave" | "leave" | "after-leave" | "leave-cancelled")[], "before-enter" | "enter" | "after-enter" | "enter-cancelled" | "before-leave" | "leave" | "after-leave" | "leave-cancelled", import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
+    close: {
+        type: FunctionConstructor;
+        default: () => undefined;
+    };
+    disabled: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    modelValue: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    options: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+}>> & {
+    "onBefore-enter"?: ((...args: any[]) => any) | undefined;
+    onEnter?: ((...args: any[]) => any) | undefined;
+    "onAfter-enter"?: ((...args: any[]) => any) | undefined;
+    "onEnter-cancelled"?: ((...args: any[]) => any) | undefined;
+    "onBefore-leave"?: ((...args: any[]) => any) | undefined;
+    onLeave?: ((...args: any[]) => any) | undefined;
+    "onAfter-leave"?: ((...args: any[]) => any) | undefined;
+    "onLeave-cancelled"?: ((...args: any[]) => any) | undefined;
+}, {
     close: Function;
     disabled: boolean;
     modelValue: boolean;
     options: Record<string, any>;
 }>;
-export default _default;
+export default _sfc_main;

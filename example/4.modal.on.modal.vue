@@ -10,7 +10,7 @@
       Show modal1
     </button>
     <a
-      href="https://github.com/hoiheart/vue-universal-modal/blob/master/example/4.modal.on.modal.vue"
+      href="https://github.com/hoiheart/vue-universal-modal/blob/main/example/4.modal.on.modal.vue"
       target="_blank"
       :class="style.button"
       class="ml-2"
