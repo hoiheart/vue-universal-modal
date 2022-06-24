@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   release:
     name: release
@@ -15,13 +15,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 12
-      - name: Install dependencies
-        run: npm ci
+          node-version: 16
+      - name: Install
+        uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: install
       - name: Build
-        run: npm run build
-      - name: Demo
-        run: npm run demo
+        uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: build
+      - name: Predeploy
+        uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: predeploy
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
       - name: Release
         uses: cycjimmy/semantic-release-action@v2
         with:

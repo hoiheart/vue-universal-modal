@@ -1,3 +1,3 @@
-import VueUniversalModal from './index'
+import VueUniversalModal from './index';
 
-export default VueUniversalModal
+export default VueUniversalModal;
