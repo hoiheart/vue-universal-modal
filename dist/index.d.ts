@@ -1,4 +1,10 @@
+import Modal from './Modal.vue';
 import type { App, Ref } from 'vue';
+declare module '@vue/runtime-core' {
+    interface GlobalComponents {
+        Modal: typeof Modal;
+    }
+}
 interface PluginOptions {
     teleportTarget?: string;
     teleportComponent?: string;

@@ -1,10 +1,10 @@
 import type { ComputedRef, Ref } from 'vue';
-declare type UseA11Y = ({ modalRef, latest, show }: {
+declare type UseA11Y = ({ modalRef, latest, show, }: {
     modalRef: Ref<null | HTMLElement>;
     latest: ComputedRef<boolean>;
     show: Ref<boolean>;
 }) => void;
-declare type UseClose = ({ close, closeKeyCode, latest }: {
+declare type UseClose = ({ close, closeKeyCode, latest, }: {
     close: Ref;
     closeClickDimmed: boolean;
     closeKeyCode: number | false;
@@ -13,7 +13,7 @@ declare type UseClose = ({ close, closeKeyCode, latest }: {
     onMouseDownDimmed: (e: MouseEvent) => void;
     onMouseUpDimmed: (e: MouseEvent) => void;
 };
-declare type UseOrder = ({ modalRef, show }: {
+declare type UseOrder = ({ modalRef, show, }: {
     modalRef: Ref<HTMLElement | null>;
     show: Ref<boolean>;
 }) => {
