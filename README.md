@@ -1,7 +1,7 @@
 # vue-universal-modal
 
 Universal modal plugin for Vue@3  
-<a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
+<a href="https://hoiheart.github.io/vue-universal-modal/" target="_blank">Demo</a>
 
 > ⚠️ This plugin does not support Vue@2
 
@@ -24,7 +24,7 @@ Universal modal plugin for Vue@3
 `vue-universal-modal` plugin is based on the <a href="https://v3.vuejs.org/guide/teleport.html#teleport" target="_blank">teleport</a>.  
 It is very light and simple, but it provides essential features for modal use in applications.  
 (Such as Add & Remove, Visible & Hidden, Transition, Auto bind keyboard and mouse to close, Support SSR, A11Y...)  
-Here is the <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
+Here is the <a href="https://hoiheart.github.io/vue-universal-modal/" target="_blank">Demo</a>
 
 ## Features
 
@@ -243,6 +243,6 @@ You can change it directly to your own style by referring to the <a href="https:
 ## Example
 
 - <a href="https://github.com/hoiheart/vue-universal-modal/blob/main/example" target="_blank">Source</a>
-- <a href="https://hoiheart.github.io/vue-universal-modal/demo/index.html" target="_blank">Demo</a>
+- <a href="https://hoiheart.github.io/vue-universal-modal/" target="_blank">Demo</a>
 - <a href="https://hoiheart.github.io/vue-universal-modal/example/runtime.html" target="_blank">Runtime</a>
 - <a href="https://codesandbox.io/s/icy-voice-v477v?file=/src/index.js" target="_blank">Get SSR Context</a>
